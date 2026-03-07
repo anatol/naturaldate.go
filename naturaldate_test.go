@@ -21,6 +21,20 @@ var pastCases = []struct {
 	{`right now`, `2019-11-25 13:07:18 +0000 UTC`},
 	{`  right  now  `, `2019-11-25 13:07:18 +0000 UTC`},
 
+	// seconds
+	{`1 second`, `2019-11-25 13:07:17 +0000 UTC`},
+	{`next second`, `2019-11-25 13:07:19 +0000 UTC`},
+	{`last second`, `2019-11-25 13:07:17 +0000 UTC`},
+	{`one second`, `2019-11-25 13:07:17 +0000 UTC`},
+	{`1 second ago`, `2019-11-25 13:07:17 +0000 UTC`},
+	{`5 seconds ago`, `2019-11-25 13:07:13 +0000 UTC`},
+	{`five seconds ago`, `2019-11-25 13:07:13 +0000 UTC`},
+	{`   5    seconds  ago   `, `2019-11-25 13:07:13 +0000 UTC`},
+	{`2 seconds from now`, `2019-11-25 13:07:20 +0000 UTC`},
+	{`two seconds from now`, `2019-11-25 13:07:20 +0000 UTC`},
+	{`Message me in 2 seconds`, `2019-11-25 13:07:20 +0000 UTC`},
+	{`Message me in 2 seconds from now`, `2019-11-25 13:07:20 +0000 UTC`},
+
 	// minutes
 	{`1 minute`, `2019-11-25 13:06:18 +0000 UTC`},
 	{`next minute`, `2019-11-25 13:08:18 +0000 UTC`},
@@ -214,6 +228,7 @@ var futureCases = []struct {
 	Output string
 }{
 	{`now`, `2019-11-25 13:07:18 +0000 UTC`},
+	{`1 second`, `2019-11-25 13:07:19 +0000 UTC`},
 	{`1 minute`, `2019-11-25 13:08:18 +0000 UTC`},
 	{`1 hour`, `2019-11-25 14:07:18 +0000 UTC`},
 	{`1 day`, `2019-11-26 00:00:00 +0000 UTC`},

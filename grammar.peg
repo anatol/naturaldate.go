@@ -25,6 +25,7 @@ DurationQuery
 
 Expr
   <- NOW
+  / RelativeSeconds
   / RelativeMinutes
   / RelativeHours
   / RelativeDays
@@ -35,6 +36,28 @@ Expr
   / Date
   / Time
   / Word
+
+RelativeSeconds
+  <- Number SECONDS AGO
+    {
+      p.t = p.t.Add(-time.Second * time.Duration(p.number))
+    }
+  / (Number SECONDS FROM_NOW / In Number? SECONDS FROM_NOW?)
+    {
+      p.t = p.t.Add(time.Second * time.Duration(p.number))
+    }
+  / Last Number? SECONDS
+    {
+      p.t = p.t.Add(-time.Second * time.Duration(p.number))
+    }
+  / Next Number? SECONDS
+    {
+      p.t = p.t.Add(time.Second * time.Duration(p.number))
+    }
+  / Number SECONDS
+    {
+      p.t = p.t.Add(p.withDirection(time.Second) * time.Duration(p.number))
+    }
 
 RelativeMinutes
   <- Number MINUTES AGO

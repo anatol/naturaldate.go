@@ -23,6 +23,7 @@ const (
 	ruleQuery
 	ruleDurationQuery
 	ruleExpr
+	ruleRelativeSeconds
 	ruleRelativeMinutes
 	ruleRelativeHours
 	ruleRelativeDays
@@ -121,12 +122,12 @@ const (
 	ruleAction49
 	ruleAction50
 	ruleAction51
-	rulePegText
 	ruleAction52
 	ruleAction53
 	ruleAction54
 	ruleAction55
 	ruleAction56
+	rulePegText
 	ruleAction57
 	ruleAction58
 	ruleAction59
@@ -159,6 +160,11 @@ const (
 	ruleAction86
 	ruleAction87
 	ruleAction88
+	ruleAction89
+	ruleAction90
+	ruleAction91
+	ruleAction92
+	ruleAction93
 )
 
 var rul3s = [...]string{
@@ -167,6 +173,7 @@ var rul3s = [...]string{
 	"Query",
 	"DurationQuery",
 	"Expr",
+	"RelativeSeconds",
 	"RelativeMinutes",
 	"RelativeHours",
 	"RelativeDays",
@@ -265,12 +272,12 @@ var rul3s = [...]string{
 	"Action49",
 	"Action50",
 	"Action51",
-	"PegText",
 	"Action52",
 	"Action53",
 	"Action54",
 	"Action55",
 	"Action56",
+	"PegText",
 	"Action57",
 	"Action58",
 	"Action59",
@@ -303,6 +310,11 @@ var rul3s = [...]string{
 	"Action86",
 	"Action87",
 	"Action88",
+	"Action89",
+	"Action90",
+	"Action91",
+	"Action92",
+	"Action93",
 }
 
 type Uint interface {
@@ -431,7 +443,7 @@ type parser[U Uint] struct {
 
 	Buffer         string
 	buffer         []rune
-	rules          [141]func() bool
+	rules          [147]func() bool
 	parse          func(rule ...int) error
 	reset          func()
 	Pretty         bool
@@ -542,109 +554,129 @@ func (p *parser[_]) Execute() {
 
 		case ruleAction0:
 
-			p.t = p.t.Add(-time.Minute * time.Duration(p.number))
+			p.t = p.t.Add(-time.Second * time.Duration(p.number))
 
 		case ruleAction1:
 
-			p.t = p.t.Add(time.Minute * time.Duration(p.number))
+			p.t = p.t.Add(time.Second * time.Duration(p.number))
 
 		case ruleAction2:
 
-			p.t = p.t.Add(-time.Minute * time.Duration(p.number))
+			p.t = p.t.Add(-time.Second * time.Duration(p.number))
 
 		case ruleAction3:
 
-			p.t = p.t.Add(time.Minute * time.Duration(p.number))
+			p.t = p.t.Add(time.Second * time.Duration(p.number))
 
 		case ruleAction4:
 
-			p.t = p.t.Add(p.withDirection(time.Minute) * time.Duration(p.number))
+			p.t = p.t.Add(p.withDirection(time.Second) * time.Duration(p.number))
 
 		case ruleAction5:
 
-			p.t = p.t.Add(-time.Hour * time.Duration(p.number))
+			p.t = p.t.Add(-time.Minute * time.Duration(p.number))
 
 		case ruleAction6:
 
-			p.t = p.t.Add(time.Hour * time.Duration(p.number))
+			p.t = p.t.Add(time.Minute * time.Duration(p.number))
 
 		case ruleAction7:
 
-			p.t = p.t.Add(-time.Hour * time.Duration(p.number))
+			p.t = p.t.Add(-time.Minute * time.Duration(p.number))
 
 		case ruleAction8:
 
-			p.t = p.t.Add(time.Hour * time.Duration(p.number))
+			p.t = p.t.Add(time.Minute * time.Duration(p.number))
 
 		case ruleAction9:
 
-			p.t = p.t.Add(p.withDirection(time.Hour) * time.Duration(p.number))
+			p.t = p.t.Add(p.withDirection(time.Minute) * time.Duration(p.number))
 
 		case ruleAction10:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, -p.number))
+			p.t = p.t.Add(-time.Hour * time.Duration(p.number))
 
 		case ruleAction11:
 
-			p.t = p.t.AddDate(0, 0, p.number)
+			p.t = p.t.Add(time.Hour * time.Duration(p.number))
 
 		case ruleAction12:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, -p.number))
+			p.t = p.t.Add(-time.Hour * time.Duration(p.number))
 
 		case ruleAction13:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, p.number))
+			p.t = p.t.Add(time.Hour * time.Duration(p.number))
 
 		case ruleAction14:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, p.direction*p.number))
+			p.t = p.t.Add(p.withDirection(time.Hour) * time.Duration(p.number))
 
 		case ruleAction15:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, -7*p.number))
+			p.t = truncateDay(p.t.AddDate(0, 0, -p.number))
 
 		case ruleAction16:
 
-			p.t = p.t.AddDate(0, 0, 7*p.number)
+			p.t = p.t.AddDate(0, 0, p.number)
 
 		case ruleAction17:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, -7*p.number))
+			p.t = truncateDay(p.t.AddDate(0, 0, -p.number))
 
 		case ruleAction18:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, 7*p.number))
+			p.t = truncateDay(p.t.AddDate(0, 0, p.number))
 
 		case ruleAction19:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, p.direction*7*p.number))
+			p.t = truncateDay(p.t.AddDate(0, 0, p.direction*p.number))
 
 		case ruleAction20:
 
-			p.t = p.t.AddDate(0, -p.number, 0)
+			p.t = truncateDay(p.t.AddDate(0, 0, -7*p.number))
 
 		case ruleAction21:
 
-			p.t = p.t.AddDate(0, p.number, 0)
+			p.t = p.t.AddDate(0, 0, 7*p.number)
 
 		case ruleAction22:
 
-			p.t = p.t.AddDate(0, -p.number, 0)
+			p.t = truncateDay(p.t.AddDate(0, 0, -7*p.number))
 
 		case ruleAction23:
 
-			p.t = p.t.AddDate(0, p.number, 0)
+			p.t = truncateDay(p.t.AddDate(0, 0, 7*p.number))
 
 		case ruleAction24:
 
-			p.t = prevMonth(p.t, p.month)
+			p.t = truncateDay(p.t.AddDate(0, 0, p.direction*7*p.number))
 
 		case ruleAction25:
 
-			p.t = nextMonth(p.t, p.month)
+			p.t = p.t.AddDate(0, -p.number, 0)
 
 		case ruleAction26:
+
+			p.t = p.t.AddDate(0, p.number, 0)
+
+		case ruleAction27:
+
+			p.t = p.t.AddDate(0, -p.number, 0)
+
+		case ruleAction28:
+
+			p.t = p.t.AddDate(0, p.number, 0)
+
+		case ruleAction29:
+
+			p.t = prevMonth(p.t, p.month)
+
+		case ruleAction30:
+
+			p.t = nextMonth(p.t, p.month)
+
+		case ruleAction31:
 
 			if p.direction < 0 {
 				p.t = prevMonth(p.t, p.month)
@@ -652,79 +684,79 @@ func (p *parser[_]) Execute() {
 				p.t = nextMonth(p.t, p.month)
 			}
 
-		case ruleAction27:
-
-			p.t = p.t.AddDate(-p.number, 0, 0)
-
-		case ruleAction28:
-
-			p.t = p.t.AddDate(p.number, 0, 0)
-
-		case ruleAction29:
-
-			p.t = p.t.AddDate(-p.number, 0, 0)
-
-		case ruleAction30:
-
-			p.t = p.t.AddDate(p.number, 0, 0)
-
-		case ruleAction31:
-
-			p.t = time.Date(p.t.Year()-1, 1, 1, 0, 0, 0, 0, p.t.Location())
-
 		case ruleAction32:
 
-			p.t = time.Date(p.t.Year()+1, 1, 1, 0, 0, 0, 0, p.t.Location())
+			p.t = p.t.AddDate(-p.number, 0, 0)
 
 		case ruleAction33:
 
-			p.t = p.t.AddDate(p.direction*p.number, 0, 0)
+			p.t = p.t.AddDate(p.number, 0, 0)
 
 		case ruleAction34:
 
-			p.t = p.t.AddDate(0, p.direction*p.number, 0)
+			p.t = p.t.AddDate(-p.number, 0, 0)
 
 		case ruleAction35:
 
-			p.t = p.t.AddDate(0, 0, p.direction*7*p.number)
+			p.t = p.t.AddDate(p.number, 0, 0)
 
 		case ruleAction36:
 
-			p.t = p.t.AddDate(0, 0, p.direction*p.number)
+			p.t = time.Date(p.t.Year()-1, 1, 1, 0, 0, 0, 0, p.t.Location())
 
 		case ruleAction37:
 
-			p.t = p.t.Add(p.withDirection(time.Hour) * time.Duration(p.number))
+			p.t = time.Date(p.t.Year()+1, 1, 1, 0, 0, 0, 0, p.t.Location())
 
 		case ruleAction38:
 
-			p.t = p.t.Add(p.withDirection(time.Minute) * time.Duration(p.number))
+			p.t = p.t.AddDate(p.direction*p.number, 0, 0)
 
 		case ruleAction39:
 
-			p.t = p.t.Add(p.withDirection(time.Second) * time.Duration(p.number))
+			p.t = p.t.AddDate(0, p.direction*p.number, 0)
 
 		case ruleAction40:
 
-			p.t = truncateDay(p.t)
+			p.t = p.t.AddDate(0, 0, p.direction*7*p.number)
 
 		case ruleAction41:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, -1))
+			p.t = p.t.AddDate(0, 0, p.direction*p.number)
 
 		case ruleAction42:
 
-			p.t = truncateDay(p.t.AddDate(0, 0, 1))
+			p.t = p.t.Add(p.withDirection(time.Hour) * time.Duration(p.number))
 
 		case ruleAction43:
 
-			p.t = truncateDay(prevWeekday(p.t, p.weekday))
+			p.t = p.t.Add(p.withDirection(time.Minute) * time.Duration(p.number))
 
 		case ruleAction44:
 
-			p.t = truncateDay(nextWeekday(p.t, p.weekday))
+			p.t = p.t.Add(p.withDirection(time.Second) * time.Duration(p.number))
 
 		case ruleAction45:
+
+			p.t = truncateDay(p.t)
+
+		case ruleAction46:
+
+			p.t = truncateDay(p.t.AddDate(0, 0, -1))
+
+		case ruleAction47:
+
+			p.t = truncateDay(p.t.AddDate(0, 0, 1))
+
+		case ruleAction48:
+
+			p.t = truncateDay(prevWeekday(p.t, p.weekday))
+
+		case ruleAction49:
+
+			p.t = truncateDay(nextWeekday(p.t, p.weekday))
+
+		case ruleAction50:
 
 			if p.direction < 0 {
 				p.t = truncateDay(prevWeekday(p.t, p.weekday))
@@ -732,116 +764,116 @@ func (p *parser[_]) Execute() {
 				p.t = truncateDay(nextWeekday(p.t, p.weekday))
 			}
 
-		case ruleAction46:
+		case ruleAction51:
 
 			t := p.t
 			year, month, _ := t.Date()
 			hour, min, sec := t.Clock()
 			p.t = time.Date(year, month, p.number, hour, min, sec, 0, t.Location())
 
-		case ruleAction47:
+		case ruleAction52:
 
 			year, month, day := p.t.Date()
 			p.t = time.Date(year, month, day, p.number, 0, 0, 0, p.t.Location())
 
-		case ruleAction48:
+		case ruleAction53:
 
 			year, month, day := p.t.Date()
 			p.t = time.Date(year, month, day, p.number+12, 0, 0, 0, p.t.Location())
 
-		case ruleAction49:
+		case ruleAction54:
 
 			year, month, day := p.t.Date()
 			p.t = time.Date(year, month, day, p.number, 0, 0, 0, p.t.Location())
 
-		case ruleAction50:
+		case ruleAction55:
 
 			t := p.t
 			year, month, day := t.Date()
 			hour, _, _ := t.Clock()
 			p.t = time.Date(year, month, day, hour, p.number, 0, 0, t.Location())
 
-		case ruleAction51:
+		case ruleAction56:
 
 			t := p.t
 			year, month, day := t.Date()
 			hour, min, _ := t.Clock()
 			p.t = time.Date(year, month, day, hour, min, p.number, 0, t.Location())
 
-		case ruleAction52:
+		case ruleAction57:
 			n, _ := strconv.Atoi(text)
 			p.number = n
-		case ruleAction53:
-			p.number = 1
-		case ruleAction54:
-			p.number = 2
-		case ruleAction55:
-			p.number = 3
-		case ruleAction56:
-			p.number = 4
-		case ruleAction57:
-			p.number = 5
 		case ruleAction58:
-			p.number = 6
+			p.number = 1
 		case ruleAction59:
-			p.number = 7
+			p.number = 2
 		case ruleAction60:
-			p.number = 8
+			p.number = 3
 		case ruleAction61:
-			p.number = 9
+			p.number = 4
 		case ruleAction62:
-			p.number = 10
+			p.number = 5
 		case ruleAction63:
-			p.number = 11
+			p.number = 6
 		case ruleAction64:
-			p.number = 12
+			p.number = 7
 		case ruleAction65:
-			p.number = 1
+			p.number = 8
 		case ruleAction66:
-			p.number = 1
+			p.number = 9
 		case ruleAction67:
-			p.weekday = time.Sunday
+			p.number = 10
 		case ruleAction68:
-			p.weekday = time.Monday
+			p.number = 11
 		case ruleAction69:
-			p.weekday = time.Tuesday
+			p.number = 12
 		case ruleAction70:
-			p.weekday = time.Wednesday
+			p.number = 1
 		case ruleAction71:
-			p.weekday = time.Thursday
+			p.number = 1
 		case ruleAction72:
-			p.weekday = time.Friday
+			p.weekday = time.Sunday
 		case ruleAction73:
-			p.weekday = time.Saturday
+			p.weekday = time.Monday
 		case ruleAction74:
-			p.month = time.January
+			p.weekday = time.Tuesday
 		case ruleAction75:
-			p.month = time.February
+			p.weekday = time.Wednesday
 		case ruleAction76:
-			p.month = time.March
+			p.weekday = time.Thursday
 		case ruleAction77:
-			p.month = time.April
+			p.weekday = time.Friday
 		case ruleAction78:
-			p.month = time.May
+			p.weekday = time.Saturday
 		case ruleAction79:
-			p.month = time.June
+			p.month = time.January
 		case ruleAction80:
-			p.month = time.July
+			p.month = time.February
 		case ruleAction81:
-			p.month = time.August
+			p.month = time.March
 		case ruleAction82:
-			p.month = time.September
+			p.month = time.April
 		case ruleAction83:
-			p.month = time.October
+			p.month = time.May
 		case ruleAction84:
-			p.month = time.November
+			p.month = time.June
 		case ruleAction85:
-			p.month = time.December
+			p.month = time.July
 		case ruleAction86:
-			p.number = 1
+			p.month = time.August
 		case ruleAction87:
-			p.number = 1
+			p.month = time.September
 		case ruleAction88:
+			p.month = time.October
+		case ruleAction89:
+			p.month = time.November
+		case ruleAction90:
+			p.month = time.December
+		case ruleAction91:
+			p.number = 1
+		case ruleAction92:
+			p.number = 1
+		case ruleAction93:
 			p.number = 1
 
 		}
@@ -1050,7 +1082,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								if !_rules[ruleNumber]() {
 									goto l17
 								}
-								if !_rules[ruleMINUTES]() {
+								if !_rules[ruleSECONDS]() {
 									goto l17
 								}
 								if !_rules[ruleAGO]() {
@@ -1067,7 +1099,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l21
 									}
-									if !_rules[ruleMINUTES]() {
+									if !_rules[ruleSECONDS]() {
 										goto l21
 									}
 									if !_rules[ruleFROM_NOW]() {
@@ -1089,7 +1121,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position22, tokenIndex22
 									}
 								l23:
-									if !_rules[ruleMINUTES]() {
+									if !_rules[ruleSECONDS]() {
 										goto l19
 									}
 									{
@@ -1123,7 +1155,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position28, tokenIndex28
 								}
 							l29:
-								if !_rules[ruleMINUTES]() {
+								if !_rules[ruleSECONDS]() {
 									goto l27
 								}
 								{
@@ -1145,7 +1177,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position32, tokenIndex32
 								}
 							l33:
-								if !_rules[ruleMINUTES]() {
+								if !_rules[ruleSECONDS]() {
 									goto l31
 								}
 								{
@@ -1157,7 +1189,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								if !_rules[ruleNumber]() {
 									goto l14
 								}
-								if !_rules[ruleMINUTES]() {
+								if !_rules[ruleSECONDS]() {
 									goto l14
 								}
 								{
@@ -1165,7 +1197,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								}
 							}
 						l16:
-							add(ruleRelativeMinutes, position15)
+							add(ruleRelativeSeconds, position15)
 						}
 						goto l11
 					l14:
@@ -1177,7 +1209,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								if !_rules[ruleNumber]() {
 									goto l39
 								}
-								if !_rules[ruleHOURS]() {
+								if !_rules[ruleMINUTES]() {
 									goto l39
 								}
 								if !_rules[ruleAGO]() {
@@ -1194,7 +1226,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l43
 									}
-									if !_rules[ruleHOURS]() {
+									if !_rules[ruleMINUTES]() {
 										goto l43
 									}
 									if !_rules[ruleFROM_NOW]() {
@@ -1216,7 +1248,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position44, tokenIndex44
 									}
 								l45:
-									if !_rules[ruleHOURS]() {
+									if !_rules[ruleMINUTES]() {
 										goto l41
 									}
 									{
@@ -1250,7 +1282,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position50, tokenIndex50
 								}
 							l51:
-								if !_rules[ruleHOURS]() {
+								if !_rules[ruleMINUTES]() {
 									goto l49
 								}
 								{
@@ -1272,7 +1304,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position54, tokenIndex54
 								}
 							l55:
-								if !_rules[ruleHOURS]() {
+								if !_rules[ruleMINUTES]() {
 									goto l53
 								}
 								{
@@ -1284,7 +1316,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								if !_rules[ruleNumber]() {
 									goto l36
 								}
-								if !_rules[ruleHOURS]() {
+								if !_rules[ruleMINUTES]() {
 									goto l36
 								}
 								{
@@ -1292,7 +1324,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								}
 							}
 						l38:
-							add(ruleRelativeHours, position37)
+							add(ruleRelativeMinutes, position37)
 						}
 						goto l11
 					l36:
@@ -1304,7 +1336,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								if !_rules[ruleNumber]() {
 									goto l61
 								}
-								if !_rules[ruleDAYS]() {
+								if !_rules[ruleHOURS]() {
 									goto l61
 								}
 								if !_rules[ruleAGO]() {
@@ -1321,7 +1353,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l65
 									}
-									if !_rules[ruleDAYS]() {
+									if !_rules[ruleHOURS]() {
 										goto l65
 									}
 									if !_rules[ruleFROM_NOW]() {
@@ -1343,7 +1375,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position66, tokenIndex66
 									}
 								l67:
-									if !_rules[ruleDAYS]() {
+									if !_rules[ruleHOURS]() {
 										goto l63
 									}
 									{
@@ -1377,7 +1409,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position72, tokenIndex72
 								}
 							l73:
-								if !_rules[ruleDAYS]() {
+								if !_rules[ruleHOURS]() {
 									goto l71
 								}
 								{
@@ -1399,7 +1431,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position76, tokenIndex76
 								}
 							l77:
-								if !_rules[ruleDAYS]() {
+								if !_rules[ruleHOURS]() {
 									goto l75
 								}
 								{
@@ -1411,7 +1443,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								if !_rules[ruleNumber]() {
 									goto l58
 								}
-								if !_rules[ruleDAYS]() {
+								if !_rules[ruleHOURS]() {
 									goto l58
 								}
 								{
@@ -1419,7 +1451,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								}
 							}
 						l60:
-							add(ruleRelativeDays, position59)
+							add(ruleRelativeHours, position59)
 						}
 						goto l11
 					l58:
@@ -1431,7 +1463,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								if !_rules[ruleNumber]() {
 									goto l83
 								}
-								if !_rules[ruleWEEKS]() {
+								if !_rules[ruleDAYS]() {
 									goto l83
 								}
 								if !_rules[ruleAGO]() {
@@ -1448,7 +1480,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l87
 									}
-									if !_rules[ruleWEEKS]() {
+									if !_rules[ruleDAYS]() {
 										goto l87
 									}
 									if !_rules[ruleFROM_NOW]() {
@@ -1470,7 +1502,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position88, tokenIndex88
 									}
 								l89:
-									if !_rules[ruleWEEKS]() {
+									if !_rules[ruleDAYS]() {
 										goto l85
 									}
 									{
@@ -1504,7 +1536,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position94, tokenIndex94
 								}
 							l95:
-								if !_rules[ruleWEEKS]() {
+								if !_rules[ruleDAYS]() {
 									goto l93
 								}
 								{
@@ -1526,7 +1558,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position98, tokenIndex98
 								}
 							l99:
-								if !_rules[ruleWEEKS]() {
+								if !_rules[ruleDAYS]() {
 									goto l97
 								}
 								{
@@ -1538,7 +1570,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								if !_rules[ruleNumber]() {
 									goto l80
 								}
-								if !_rules[ruleWEEKS]() {
+								if !_rules[ruleDAYS]() {
 									goto l80
 								}
 								{
@@ -1546,7 +1578,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								}
 							}
 						l82:
-							add(ruleRelativeWeeks, position81)
+							add(ruleRelativeDays, position81)
 						}
 						goto l11
 					l80:
@@ -1555,377 +1587,378 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 							position103 := position
 							{
 								position104, tokenIndex104 := position, tokenIndex
-								{
-									position106 := position
-									if buffer[position] != 't' {
-										goto l105
-									}
-									position++
-									if buffer[position] != 'o' {
-										goto l105
-									}
-									position++
-									if buffer[position] != 'd' {
-										goto l105
-									}
-									position++
-									if buffer[position] != 'a' {
-										goto l105
-									}
-									position++
-									if buffer[position] != 'y' {
-										goto l105
-									}
-									position++
-									_rules[rule_]()
-									add(ruleTODAY, position106)
+								if !_rules[ruleNumber]() {
+									goto l105
+								}
+								if !_rules[ruleWEEKS]() {
+									goto l105
+								}
+								if !_rules[ruleAGO]() {
+									goto l105
 								}
 								{
-									add(ruleAction40, position)
+									add(ruleAction20, position)
 								}
 								goto l104
 							l105:
 								position, tokenIndex = position104, tokenIndex104
 								{
-									position109 := position
-									if buffer[position] != 't' {
-										goto l108
+									position108, tokenIndex108 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l109
 									}
-									position++
-									if buffer[position] != 'o' {
-										goto l108
+									if !_rules[ruleWEEKS]() {
+										goto l109
 									}
-									position++
-									if buffer[position] != 'm' {
-										goto l108
+									if !_rules[ruleFROM_NOW]() {
+										goto l109
 									}
-									position++
-									if buffer[position] != 'o' {
-										goto l108
+									goto l108
+								l109:
+									position, tokenIndex = position108, tokenIndex108
+									if !_rules[ruleIn]() {
+										goto l107
 									}
-									position++
-									if buffer[position] != 'r' {
-										goto l108
+									{
+										position110, tokenIndex110 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l110
+										}
+										goto l111
+									l110:
+										position, tokenIndex = position110, tokenIndex110
 									}
-									position++
-									if buffer[position] != 'r' {
-										goto l108
+								l111:
+									if !_rules[ruleWEEKS]() {
+										goto l107
 									}
-									position++
-									if buffer[position] != 'o' {
-										goto l108
+									{
+										position112, tokenIndex112 := position, tokenIndex
+										if !_rules[ruleFROM_NOW]() {
+											goto l112
+										}
+										goto l113
+									l112:
+										position, tokenIndex = position112, tokenIndex112
 									}
-									position++
-									if buffer[position] != 'w' {
-										goto l108
-									}
-									position++
-									_rules[rule_]()
-									add(ruleTOMORROW, position109)
+								l113:
 								}
+							l108:
 								{
-									add(ruleAction42, position)
+									add(ruleAction21, position)
 								}
 								goto l104
-							l108:
+							l107:
 								position, tokenIndex = position104, tokenIndex104
-								{
-									switch buffer[position] {
-									case 'n':
-										if !_rules[ruleNEXT]() {
-											goto l102
-										}
-										if !_rules[ruleWeekday]() {
-											goto l102
-										}
-										{
-											add(ruleAction44, position)
-										}
-									case 'y':
-										{
-											position113 := position
-											position++
-											if buffer[position] != 'e' {
-												goto l102
-											}
-											position++
-											if buffer[position] != 's' {
-												goto l102
-											}
-											position++
-											if buffer[position] != 't' {
-												goto l102
-											}
-											position++
-											if buffer[position] != 'e' {
-												goto l102
-											}
-											position++
-											if buffer[position] != 'r' {
-												goto l102
-											}
-											position++
-											if buffer[position] != 'd' {
-												goto l102
-											}
-											position++
-											if buffer[position] != 'a' {
-												goto l102
-											}
-											position++
-											if buffer[position] != 'y' {
-												goto l102
-											}
-											position++
-											_rules[rule_]()
-											add(ruleYESTERDAY, position113)
-										}
-										{
-											add(ruleAction41, position)
-										}
-									case 'l', 'p':
-										if !_rules[ruleLAST]() {
-											goto l102
-										}
-										if !_rules[ruleWeekday]() {
-											goto l102
-										}
-										{
-											add(ruleAction43, position)
-										}
-									default:
-										if !_rules[ruleWeekday]() {
-											goto l102
-										}
-										{
-											add(ruleAction45, position)
-										}
-									}
+								if !_rules[ruleLast]() {
+									goto l115
 								}
-
+								{
+									position116, tokenIndex116 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l116
+									}
+									goto l117
+								l116:
+									position, tokenIndex = position116, tokenIndex116
+								}
+							l117:
+								if !_rules[ruleWEEKS]() {
+									goto l115
+								}
+								{
+									add(ruleAction22, position)
+								}
+								goto l104
+							l115:
+								position, tokenIndex = position104, tokenIndex104
+								if !_rules[ruleNext]() {
+									goto l119
+								}
+								{
+									position120, tokenIndex120 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l120
+									}
+									goto l121
+								l120:
+									position, tokenIndex = position120, tokenIndex120
+								}
+							l121:
+								if !_rules[ruleWEEKS]() {
+									goto l119
+								}
+								{
+									add(ruleAction23, position)
+								}
+								goto l104
+							l119:
+								position, tokenIndex = position104, tokenIndex104
+								if !_rules[ruleNumber]() {
+									goto l102
+								}
+								if !_rules[ruleWEEKS]() {
+									goto l102
+								}
+								{
+									add(ruleAction24, position)
+								}
 							}
 						l104:
-							add(ruleRelativeWeekdays, position103)
+							add(ruleRelativeWeeks, position103)
 						}
 						goto l11
 					l102:
 						position, tokenIndex = position11, tokenIndex11
 						{
-							position118 := position
+							position125 := position
 							{
-								position119, tokenIndex119 := position, tokenIndex
+								position126, tokenIndex126 := position, tokenIndex
+								{
+									position128 := position
+									if buffer[position] != 't' {
+										goto l127
+									}
+									position++
+									if buffer[position] != 'o' {
+										goto l127
+									}
+									position++
+									if buffer[position] != 'd' {
+										goto l127
+									}
+									position++
+									if buffer[position] != 'a' {
+										goto l127
+									}
+									position++
+									if buffer[position] != 'y' {
+										goto l127
+									}
+									position++
+									_rules[rule_]()
+									add(ruleTODAY, position128)
+								}
+								{
+									add(ruleAction45, position)
+								}
+								goto l126
+							l127:
+								position, tokenIndex = position126, tokenIndex126
+								{
+									position131 := position
+									if buffer[position] != 't' {
+										goto l130
+									}
+									position++
+									if buffer[position] != 'o' {
+										goto l130
+									}
+									position++
+									if buffer[position] != 'm' {
+										goto l130
+									}
+									position++
+									if buffer[position] != 'o' {
+										goto l130
+									}
+									position++
+									if buffer[position] != 'r' {
+										goto l130
+									}
+									position++
+									if buffer[position] != 'r' {
+										goto l130
+									}
+									position++
+									if buffer[position] != 'o' {
+										goto l130
+									}
+									position++
+									if buffer[position] != 'w' {
+										goto l130
+									}
+									position++
+									_rules[rule_]()
+									add(ruleTOMORROW, position131)
+								}
+								{
+									add(ruleAction47, position)
+								}
+								goto l126
+							l130:
+								position, tokenIndex = position126, tokenIndex126
+								{
+									switch buffer[position] {
+									case 'n':
+										if !_rules[ruleNEXT]() {
+											goto l124
+										}
+										if !_rules[ruleWeekday]() {
+											goto l124
+										}
+										{
+											add(ruleAction49, position)
+										}
+									case 'y':
+										{
+											position135 := position
+											position++
+											if buffer[position] != 'e' {
+												goto l124
+											}
+											position++
+											if buffer[position] != 's' {
+												goto l124
+											}
+											position++
+											if buffer[position] != 't' {
+												goto l124
+											}
+											position++
+											if buffer[position] != 'e' {
+												goto l124
+											}
+											position++
+											if buffer[position] != 'r' {
+												goto l124
+											}
+											position++
+											if buffer[position] != 'd' {
+												goto l124
+											}
+											position++
+											if buffer[position] != 'a' {
+												goto l124
+											}
+											position++
+											if buffer[position] != 'y' {
+												goto l124
+											}
+											position++
+											_rules[rule_]()
+											add(ruleYESTERDAY, position135)
+										}
+										{
+											add(ruleAction46, position)
+										}
+									case 'l', 'p':
+										if !_rules[ruleLAST]() {
+											goto l124
+										}
+										if !_rules[ruleWeekday]() {
+											goto l124
+										}
+										{
+											add(ruleAction48, position)
+										}
+									default:
+										if !_rules[ruleWeekday]() {
+											goto l124
+										}
+										{
+											add(ruleAction50, position)
+										}
+									}
+								}
+
+							}
+						l126:
+							add(ruleRelativeWeekdays, position125)
+						}
+						goto l11
+					l124:
+						position, tokenIndex = position11, tokenIndex11
+						{
+							position140 := position
+							{
+								position141, tokenIndex141 := position, tokenIndex
 								if !_rules[ruleNumber]() {
-									goto l120
+									goto l142
 								}
 								if !_rules[ruleMONTHS]() {
-									goto l120
+									goto l142
 								}
 								if !_rules[ruleAGO]() {
-									goto l120
-								}
-								{
-									add(ruleAction20, position)
-								}
-								goto l119
-							l120:
-								position, tokenIndex = position119, tokenIndex119
-								{
-									position123, tokenIndex123 := position, tokenIndex
-									if !_rules[ruleNumber]() {
-										goto l124
-									}
-									if !_rules[ruleMONTHS]() {
-										goto l124
-									}
-									if !_rules[ruleFROM_NOW]() {
-										goto l124
-									}
-									goto l123
-								l124:
-									position, tokenIndex = position123, tokenIndex123
-									if !_rules[ruleIn]() {
-										goto l122
-									}
-									{
-										position125, tokenIndex125 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l125
-										}
-										goto l126
-									l125:
-										position, tokenIndex = position125, tokenIndex125
-									}
-								l126:
-									if !_rules[ruleMONTHS]() {
-										goto l122
-									}
-									{
-										position127, tokenIndex127 := position, tokenIndex
-										if !_rules[ruleFROM_NOW]() {
-											goto l127
-										}
-										goto l128
-									l127:
-										position, tokenIndex = position127, tokenIndex127
-									}
-								l128:
-								}
-							l123:
-								{
-									add(ruleAction21, position)
-								}
-								goto l119
-							l122:
-								position, tokenIndex = position119, tokenIndex119
-								if !_rules[ruleLast]() {
-									goto l130
-								}
-								{
-									position131, tokenIndex131 := position, tokenIndex
-									if !_rules[ruleNumber]() {
-										goto l131
-									}
-									goto l132
-								l131:
-									position, tokenIndex = position131, tokenIndex131
-								}
-							l132:
-								if !_rules[ruleMONTHS]() {
-									goto l130
-								}
-								{
-									add(ruleAction22, position)
-								}
-								goto l119
-							l130:
-								position, tokenIndex = position119, tokenIndex119
-								if !_rules[ruleNext]() {
-									goto l134
-								}
-								{
-									position135, tokenIndex135 := position, tokenIndex
-									if !_rules[ruleNumber]() {
-										goto l135
-									}
-									goto l136
-								l135:
-									position, tokenIndex = position135, tokenIndex135
-								}
-							l136:
-								if !_rules[ruleMONTHS]() {
-									goto l134
-								}
-								{
-									add(ruleAction23, position)
-								}
-								goto l119
-							l134:
-								position, tokenIndex = position119, tokenIndex119
-								if !_rules[ruleLAST]() {
-									goto l138
-								}
-								if !_rules[ruleMonth]() {
-									goto l138
-								}
-								{
-									add(ruleAction24, position)
-								}
-								goto l119
-							l138:
-								position, tokenIndex = position119, tokenIndex119
-								if !_rules[ruleNEXT]() {
-									goto l140
-								}
-								if !_rules[ruleMonth]() {
-									goto l140
+									goto l142
 								}
 								{
 									add(ruleAction25, position)
 								}
-								goto l119
-							l140:
-								position, tokenIndex = position119, tokenIndex119
-								if !_rules[ruleMonth]() {
-									goto l117
+								goto l141
+							l142:
+								position, tokenIndex = position141, tokenIndex141
+								{
+									position145, tokenIndex145 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l146
+									}
+									if !_rules[ruleMONTHS]() {
+										goto l146
+									}
+									if !_rules[ruleFROM_NOW]() {
+										goto l146
+									}
+									goto l145
+								l146:
+									position, tokenIndex = position145, tokenIndex145
+									if !_rules[ruleIn]() {
+										goto l144
+									}
+									{
+										position147, tokenIndex147 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l147
+										}
+										goto l148
+									l147:
+										position, tokenIndex = position147, tokenIndex147
+									}
+								l148:
+									if !_rules[ruleMONTHS]() {
+										goto l144
+									}
+									{
+										position149, tokenIndex149 := position, tokenIndex
+										if !_rules[ruleFROM_NOW]() {
+											goto l149
+										}
+										goto l150
+									l149:
+										position, tokenIndex = position149, tokenIndex149
+									}
+								l150:
 								}
+							l145:
 								{
 									add(ruleAction26, position)
 								}
-							}
-						l119:
-							add(ruleRelativeMonth, position118)
-						}
-						goto l11
-					l117:
-						position, tokenIndex = position11, tokenIndex11
-						{
-							position144 := position
-							{
-								position145, tokenIndex145 := position, tokenIndex
-								if !_rules[ruleNumber]() {
-									goto l146
+								goto l141
+							l144:
+								position, tokenIndex = position141, tokenIndex141
+								if !_rules[ruleLast]() {
+									goto l152
 								}
-								if !_rules[ruleYEARS]() {
-									goto l146
+								{
+									position153, tokenIndex153 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l153
+									}
+									goto l154
+								l153:
+									position, tokenIndex = position153, tokenIndex153
 								}
-								if !_rules[ruleAGO]() {
-									goto l146
+							l154:
+								if !_rules[ruleMONTHS]() {
+									goto l152
 								}
 								{
 									add(ruleAction27, position)
 								}
-								goto l145
-							l146:
-								position, tokenIndex = position145, tokenIndex145
-								{
-									position149, tokenIndex149 := position, tokenIndex
-									if !_rules[ruleNumber]() {
-										goto l150
-									}
-									if !_rules[ruleYEARS]() {
-										goto l150
-									}
-									if !_rules[ruleFROM_NOW]() {
-										goto l150
-									}
-									goto l149
-								l150:
-									position, tokenIndex = position149, tokenIndex149
-									if !_rules[ruleIn]() {
-										goto l148
-									}
-									{
-										position151, tokenIndex151 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l151
-										}
-										goto l152
-									l151:
-										position, tokenIndex = position151, tokenIndex151
-									}
-								l152:
-									if !_rules[ruleYEARS]() {
-										goto l148
-									}
-									{
-										position153, tokenIndex153 := position, tokenIndex
-										if !_rules[ruleFROM_NOW]() {
-											goto l153
-										}
-										goto l154
-									l153:
-										position, tokenIndex = position153, tokenIndex153
-									}
-								l154:
-								}
-							l149:
-								{
-									add(ruleAction28, position)
-								}
-								goto l145
-							l148:
-								position, tokenIndex = position145, tokenIndex145
-								if !_rules[ruleLast]() {
+								goto l141
+							l152:
+								position, tokenIndex = position141, tokenIndex141
+								if !_rules[ruleNext]() {
 									goto l156
 								}
 								{
@@ -1938,290 +1971,416 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									position, tokenIndex = position157, tokenIndex157
 								}
 							l158:
-								if !_rules[ruleYEARS]() {
+								if !_rules[ruleMONTHS]() {
 									goto l156
+								}
+								{
+									add(ruleAction28, position)
+								}
+								goto l141
+							l156:
+								position, tokenIndex = position141, tokenIndex141
+								if !_rules[ruleLAST]() {
+									goto l160
+								}
+								if !_rules[ruleMonth]() {
+									goto l160
 								}
 								{
 									add(ruleAction29, position)
 								}
-								goto l145
-							l156:
-								position, tokenIndex = position145, tokenIndex145
-								if !_rules[ruleNext]() {
-									goto l160
-								}
-								{
-									position161, tokenIndex161 := position, tokenIndex
-									if !_rules[ruleNumber]() {
-										goto l161
-									}
+								goto l141
+							l160:
+								position, tokenIndex = position141, tokenIndex141
+								if !_rules[ruleNEXT]() {
 									goto l162
-								l161:
-									position, tokenIndex = position161, tokenIndex161
 								}
-							l162:
-								if !_rules[ruleYEARS]() {
-									goto l160
+								if !_rules[ruleMonth]() {
+									goto l162
 								}
 								{
 									add(ruleAction30, position)
 								}
-								goto l145
-							l160:
-								position, tokenIndex = position145, tokenIndex145
-								if !_rules[ruleLAST]() {
-									goto l164
-								}
-								if !_rules[ruleYEARS]() {
-									goto l164
+								goto l141
+							l162:
+								position, tokenIndex = position141, tokenIndex141
+								if !_rules[ruleMonth]() {
+									goto l139
 								}
 								{
 									add(ruleAction31, position)
 								}
-								goto l145
-							l164:
-								position, tokenIndex = position145, tokenIndex145
-								if !_rules[ruleNEXT]() {
-									goto l143
+							}
+						l141:
+							add(ruleRelativeMonth, position140)
+						}
+						goto l11
+					l139:
+						position, tokenIndex = position11, tokenIndex11
+						{
+							position166 := position
+							{
+								position167, tokenIndex167 := position, tokenIndex
+								if !_rules[ruleNumber]() {
+									goto l168
 								}
 								if !_rules[ruleYEARS]() {
-									goto l143
+									goto l168
+								}
+								if !_rules[ruleAGO]() {
+									goto l168
 								}
 								{
 									add(ruleAction32, position)
 								}
-							}
-						l145:
-							add(ruleRelativeYear, position144)
-						}
-						goto l11
-					l143:
-						position, tokenIndex = position11, tokenIndex11
-						{
-							position168 := position
-							{
-								position169, tokenIndex169 := position, tokenIndex
-								if !_rules[ruleNumber]() {
-									goto l170
+								goto l167
+							l168:
+								position, tokenIndex = position167, tokenIndex167
+								{
+									position171, tokenIndex171 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l172
+									}
+									if !_rules[ruleYEARS]() {
+										goto l172
+									}
+									if !_rules[ruleFROM_NOW]() {
+										goto l172
+									}
+									goto l171
+								l172:
+									position, tokenIndex = position171, tokenIndex171
+									if !_rules[ruleIn]() {
+										goto l170
+									}
+									{
+										position173, tokenIndex173 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l173
+										}
+										goto l174
+									l173:
+										position, tokenIndex = position173, tokenIndex173
+									}
+								l174:
+									if !_rules[ruleYEARS]() {
+										goto l170
+									}
+									{
+										position175, tokenIndex175 := position, tokenIndex
+										if !_rules[ruleFROM_NOW]() {
+											goto l175
+										}
+										goto l176
+									l175:
+										position, tokenIndex = position175, tokenIndex175
+									}
+								l176:
+								}
+							l171:
+								{
+									add(ruleAction33, position)
+								}
+								goto l167
+							l170:
+								position, tokenIndex = position167, tokenIndex167
+								if !_rules[ruleLast]() {
+									goto l178
 								}
 								{
-									position171 := position
+									position179, tokenIndex179 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l179
+									}
+									goto l180
+								l179:
+									position, tokenIndex = position179, tokenIndex179
+								}
+							l180:
+								if !_rules[ruleYEARS]() {
+									goto l178
+								}
+								{
+									add(ruleAction34, position)
+								}
+								goto l167
+							l178:
+								position, tokenIndex = position167, tokenIndex167
+								if !_rules[ruleNext]() {
+									goto l182
+								}
+								{
+									position183, tokenIndex183 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l183
+									}
+									goto l184
+								l183:
+									position, tokenIndex = position183, tokenIndex183
+								}
+							l184:
+								if !_rules[ruleYEARS]() {
+									goto l182
+								}
+								{
+									add(ruleAction35, position)
+								}
+								goto l167
+							l182:
+								position, tokenIndex = position167, tokenIndex167
+								if !_rules[ruleLAST]() {
+									goto l186
+								}
+								if !_rules[ruleYEARS]() {
+									goto l186
+								}
+								{
+									add(ruleAction36, position)
+								}
+								goto l167
+							l186:
+								position, tokenIndex = position167, tokenIndex167
+								if !_rules[ruleNEXT]() {
+									goto l165
+								}
+								if !_rules[ruleYEARS]() {
+									goto l165
+								}
+								{
+									add(ruleAction37, position)
+								}
+							}
+						l167:
+							add(ruleRelativeYear, position166)
+						}
+						goto l11
+					l165:
+						position, tokenIndex = position11, tokenIndex11
+						{
+							position190 := position
+							{
+								position191, tokenIndex191 := position, tokenIndex
+								if !_rules[ruleNumber]() {
+									goto l192
+								}
+								{
+									position193 := position
 									{
 										switch buffer[position] {
 										case 't':
 											position++
 											if buffer[position] != 'h' {
-												goto l170
+												goto l192
 											}
 											position++
 										case 'r':
 											position++
 											if buffer[position] != 'd' {
-												goto l170
+												goto l192
 											}
 											position++
 										case 'n':
 											position++
 											if buffer[position] != 'd' {
-												goto l170
+												goto l192
 											}
 											position++
 										default:
 											if buffer[position] != 's' {
-												goto l170
+												goto l192
 											}
 											position++
 											if buffer[position] != 't' {
-												goto l170
+												goto l192
 											}
 											position++
 										}
 									}
 
 									_rules[rule_]()
-									add(ruleOrdinal, position171)
+									add(ruleOrdinal, position193)
 								}
-								goto l169
-							l170:
-								position, tokenIndex = position169, tokenIndex169
+								goto l191
+							l192:
+								position, tokenIndex = position191, tokenIndex191
 								if !_rules[ruleLast]() {
-									goto l167
+									goto l189
 								}
 								{
-									position173, tokenIndex173 := position, tokenIndex
+									position195, tokenIndex195 := position, tokenIndex
 									if !_rules[ruleNumber]() {
-										goto l173
+										goto l195
 									}
-									goto l174
-								l173:
-									position, tokenIndex = position173, tokenIndex173
+									goto l196
+								l195:
+									position, tokenIndex = position195, tokenIndex195
 								}
-							l174:
+							l196:
 								if !_rules[ruleNumber]() {
-									goto l167
+									goto l189
 								}
 							}
-						l169:
+						l191:
 							{
-								add(ruleAction46, position)
+								add(ruleAction51, position)
 							}
-							add(ruleDate, position168)
+							add(ruleDate, position190)
 						}
 						goto l11
-					l167:
+					l189:
 						position, tokenIndex = position11, tokenIndex11
 						{
-							position177 := position
+							position199 := position
 							{
-								position178, tokenIndex178 := position, tokenIndex
+								position200, tokenIndex200 := position, tokenIndex
 								{
-									position180 := position
+									position202 := position
 									{
-										position181, tokenIndex181 := position, tokenIndex
+										position203, tokenIndex203 := position, tokenIndex
 										if !_rules[ruleNumber]() {
-											goto l182
+											goto l204
 										}
 										{
-											add(ruleAction47, position)
+											add(ruleAction52, position)
 										}
 										{
-											position184, tokenIndex184 := position, tokenIndex
+											position206, tokenIndex206 := position, tokenIndex
 											if !_rules[ruleMinutes]() {
-												goto l184
+												goto l206
 											}
 											{
-												position186, tokenIndex186 := position, tokenIndex
+												position208, tokenIndex208 := position, tokenIndex
 												if !_rules[ruleSeconds]() {
-													goto l186
+													goto l208
 												}
-												goto l187
-											l186:
-												position, tokenIndex = position186, tokenIndex186
+												goto l209
+											l208:
+												position, tokenIndex = position208, tokenIndex208
 											}
-										l187:
-											goto l185
-										l184:
-											position, tokenIndex = position184, tokenIndex184
+										l209:
+											goto l207
+										l206:
+											position, tokenIndex = position206, tokenIndex206
 										}
-									l185:
+									l207:
 										{
-											position188 := position
+											position210 := position
 											if buffer[position] != 'a' {
-												goto l182
+												goto l204
 											}
 											position++
 											if buffer[position] != 'm' {
-												goto l182
+												goto l204
 											}
 											position++
 											_rules[rule_]()
-											add(ruleAM, position188)
+											add(ruleAM, position210)
 										}
-										goto l181
-									l182:
-										position, tokenIndex = position181, tokenIndex181
+										goto l203
+									l204:
+										position, tokenIndex = position203, tokenIndex203
 										if !_rules[ruleNumber]() {
-											goto l179
+											goto l201
 										}
 										{
-											add(ruleAction48, position)
+											add(ruleAction53, position)
 										}
 										{
-											position190, tokenIndex190 := position, tokenIndex
+											position212, tokenIndex212 := position, tokenIndex
 											if !_rules[ruleMinutes]() {
-												goto l190
+												goto l212
 											}
 											{
-												position192, tokenIndex192 := position, tokenIndex
+												position214, tokenIndex214 := position, tokenIndex
 												if !_rules[ruleSeconds]() {
-													goto l192
+													goto l214
 												}
-												goto l193
-											l192:
-												position, tokenIndex = position192, tokenIndex192
+												goto l215
+											l214:
+												position, tokenIndex = position214, tokenIndex214
 											}
-										l193:
-											goto l191
-										l190:
-											position, tokenIndex = position190, tokenIndex190
+										l215:
+											goto l213
+										l212:
+											position, tokenIndex = position212, tokenIndex212
 										}
-									l191:
+									l213:
 										{
-											position194 := position
+											position216 := position
 											if buffer[position] != 'p' {
-												goto l179
+												goto l201
 											}
 											position++
 											if buffer[position] != 'm' {
-												goto l179
+												goto l201
 											}
 											position++
 											_rules[rule_]()
-											add(rulePM, position194)
+											add(rulePM, position216)
 										}
 									}
-								l181:
-									add(ruleClock12Hour, position180)
+								l203:
+									add(ruleClock12Hour, position202)
 								}
-								goto l178
-							l179:
-								position, tokenIndex = position178, tokenIndex178
+								goto l200
+							l201:
+								position, tokenIndex = position200, tokenIndex200
 								{
-									position195 := position
+									position217 := position
 									if !_rules[ruleNumber]() {
-										goto l176
+										goto l198
 									}
 									{
-										add(ruleAction49, position)
+										add(ruleAction54, position)
 									}
 									{
-										position197, tokenIndex197 := position, tokenIndex
+										position219, tokenIndex219 := position, tokenIndex
 										if !_rules[ruleMinutes]() {
-											goto l197
+											goto l219
 										}
 										{
-											position199, tokenIndex199 := position, tokenIndex
+											position221, tokenIndex221 := position, tokenIndex
 											if !_rules[ruleSeconds]() {
-												goto l199
+												goto l221
 											}
-											goto l200
-										l199:
-											position, tokenIndex = position199, tokenIndex199
+											goto l222
+										l221:
+											position, tokenIndex = position221, tokenIndex221
 										}
-									l200:
-										goto l198
-									l197:
-										position, tokenIndex = position197, tokenIndex197
+									l222:
+										goto l220
+									l219:
+										position, tokenIndex = position219, tokenIndex219
 									}
-								l198:
-									add(ruleClock24Hour, position195)
+								l220:
+									add(ruleClock24Hour, position217)
 								}
 							}
-						l178:
-							add(ruleTime, position177)
+						l200:
+							add(ruleTime, position199)
 						}
 						goto l11
-					l176:
+					l198:
 						position, tokenIndex = position11, tokenIndex11
 						{
-							position201 := position
+							position223 := position
 							if c := buffer[position]; c < 'a' || c > 'z' {
 								goto l6
 							}
 							position++
-						l202:
+						l224:
 							{
-								position203, tokenIndex203 := position, tokenIndex
+								position225, tokenIndex225 := position, tokenIndex
 								if c := buffer[position]; c < 'a' || c > 'z' {
-									goto l203
+									goto l225
 								}
 								position++
-								goto l202
-							l203:
-								position, tokenIndex = position203, tokenIndex203
+								goto l224
+							l225:
+								position, tokenIndex = position225, tokenIndex225
 							}
 							_rules[rule_]()
-							add(ruleWord, position201)
+							add(ruleWord, position223)
 						}
 					}
 				l11:
@@ -2231,156 +2390,29 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 				{
 					position9, tokenIndex9 := position, tokenIndex
 					{
-						position204 := position
+						position226 := position
 						{
-							position205, tokenIndex205 := position, tokenIndex
+							position227, tokenIndex227 := position, tokenIndex
 							{
-								position207 := position
+								position229 := position
 								if buffer[position] != 'n' {
-									goto l206
+									goto l228
 								}
 								position++
 								if buffer[position] != 'o' {
-									goto l206
+									goto l228
 								}
 								position++
 								if buffer[position] != 'w' {
-									goto l206
+									goto l228
 								}
 								position++
 								_rules[rule_]()
-								add(ruleNOW, position207)
+								add(ruleNOW, position229)
 							}
-							goto l205
-						l206:
-							position, tokenIndex = position205, tokenIndex205
-							{
-								position209 := position
-								{
-									position210, tokenIndex210 := position, tokenIndex
-									if !_rules[ruleNumber]() {
-										goto l211
-									}
-									if !_rules[ruleMINUTES]() {
-										goto l211
-									}
-									if !_rules[ruleAGO]() {
-										goto l211
-									}
-									{
-										add(ruleAction0, position)
-									}
-									goto l210
-								l211:
-									position, tokenIndex = position210, tokenIndex210
-									{
-										position214, tokenIndex214 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l215
-										}
-										if !_rules[ruleMINUTES]() {
-											goto l215
-										}
-										if !_rules[ruleFROM_NOW]() {
-											goto l215
-										}
-										goto l214
-									l215:
-										position, tokenIndex = position214, tokenIndex214
-										if !_rules[ruleIn]() {
-											goto l213
-										}
-										{
-											position216, tokenIndex216 := position, tokenIndex
-											if !_rules[ruleNumber]() {
-												goto l216
-											}
-											goto l217
-										l216:
-											position, tokenIndex = position216, tokenIndex216
-										}
-									l217:
-										if !_rules[ruleMINUTES]() {
-											goto l213
-										}
-										{
-											position218, tokenIndex218 := position, tokenIndex
-											if !_rules[ruleFROM_NOW]() {
-												goto l218
-											}
-											goto l219
-										l218:
-											position, tokenIndex = position218, tokenIndex218
-										}
-									l219:
-									}
-								l214:
-									{
-										add(ruleAction1, position)
-									}
-									goto l210
-								l213:
-									position, tokenIndex = position210, tokenIndex210
-									if !_rules[ruleLast]() {
-										goto l221
-									}
-									{
-										position222, tokenIndex222 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l222
-										}
-										goto l223
-									l222:
-										position, tokenIndex = position222, tokenIndex222
-									}
-								l223:
-									if !_rules[ruleMINUTES]() {
-										goto l221
-									}
-									{
-										add(ruleAction2, position)
-									}
-									goto l210
-								l221:
-									position, tokenIndex = position210, tokenIndex210
-									if !_rules[ruleNext]() {
-										goto l225
-									}
-									{
-										position226, tokenIndex226 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l226
-										}
-										goto l227
-									l226:
-										position, tokenIndex = position226, tokenIndex226
-									}
-								l227:
-									if !_rules[ruleMINUTES]() {
-										goto l225
-									}
-									{
-										add(ruleAction3, position)
-									}
-									goto l210
-								l225:
-									position, tokenIndex = position210, tokenIndex210
-									if !_rules[ruleNumber]() {
-										goto l208
-									}
-									if !_rules[ruleMINUTES]() {
-										goto l208
-									}
-									{
-										add(ruleAction4, position)
-									}
-								}
-							l210:
-								add(ruleRelativeMinutes, position209)
-							}
-							goto l205
-						l208:
-							position, tokenIndex = position205, tokenIndex205
+							goto l227
+						l228:
+							position, tokenIndex = position227, tokenIndex227
 							{
 								position231 := position
 								{
@@ -2388,14 +2420,14 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l233
 									}
-									if !_rules[ruleHOURS]() {
+									if !_rules[ruleSECONDS]() {
 										goto l233
 									}
 									if !_rules[ruleAGO]() {
 										goto l233
 									}
 									{
-										add(ruleAction5, position)
+										add(ruleAction0, position)
 									}
 									goto l232
 								l233:
@@ -2405,7 +2437,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										if !_rules[ruleNumber]() {
 											goto l237
 										}
-										if !_rules[ruleHOURS]() {
+										if !_rules[ruleSECONDS]() {
 											goto l237
 										}
 										if !_rules[ruleFROM_NOW]() {
@@ -2427,7 +2459,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 											position, tokenIndex = position238, tokenIndex238
 										}
 									l239:
-										if !_rules[ruleHOURS]() {
+										if !_rules[ruleSECONDS]() {
 											goto l235
 										}
 										{
@@ -2443,7 +2475,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									}
 								l236:
 									{
-										add(ruleAction6, position)
+										add(ruleAction1, position)
 									}
 									goto l232
 								l235:
@@ -2461,11 +2493,11 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position244, tokenIndex244
 									}
 								l245:
-									if !_rules[ruleHOURS]() {
+									if !_rules[ruleSECONDS]() {
 										goto l243
 									}
 									{
-										add(ruleAction7, position)
+										add(ruleAction2, position)
 									}
 									goto l232
 								l243:
@@ -2483,11 +2515,11 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position248, tokenIndex248
 									}
 								l249:
-									if !_rules[ruleHOURS]() {
+									if !_rules[ruleSECONDS]() {
 										goto l247
 									}
 									{
-										add(ruleAction8, position)
+										add(ruleAction3, position)
 									}
 									goto l232
 								l247:
@@ -2495,19 +2527,19 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l230
 									}
-									if !_rules[ruleHOURS]() {
+									if !_rules[ruleSECONDS]() {
 										goto l230
 									}
 									{
-										add(ruleAction9, position)
+										add(ruleAction4, position)
 									}
 								}
 							l232:
-								add(ruleRelativeHours, position231)
+								add(ruleRelativeSeconds, position231)
 							}
-							goto l205
+							goto l227
 						l230:
-							position, tokenIndex = position205, tokenIndex205
+							position, tokenIndex = position227, tokenIndex227
 							{
 								position253 := position
 								{
@@ -2515,14 +2547,14 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l255
 									}
-									if !_rules[ruleDAYS]() {
+									if !_rules[ruleMINUTES]() {
 										goto l255
 									}
 									if !_rules[ruleAGO]() {
 										goto l255
 									}
 									{
-										add(ruleAction10, position)
+										add(ruleAction5, position)
 									}
 									goto l254
 								l255:
@@ -2532,7 +2564,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										if !_rules[ruleNumber]() {
 											goto l259
 										}
-										if !_rules[ruleDAYS]() {
+										if !_rules[ruleMINUTES]() {
 											goto l259
 										}
 										if !_rules[ruleFROM_NOW]() {
@@ -2554,7 +2586,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 											position, tokenIndex = position260, tokenIndex260
 										}
 									l261:
-										if !_rules[ruleDAYS]() {
+										if !_rules[ruleMINUTES]() {
 											goto l257
 										}
 										{
@@ -2570,7 +2602,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									}
 								l258:
 									{
-										add(ruleAction11, position)
+										add(ruleAction6, position)
 									}
 									goto l254
 								l257:
@@ -2588,11 +2620,11 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position266, tokenIndex266
 									}
 								l267:
-									if !_rules[ruleDAYS]() {
+									if !_rules[ruleMINUTES]() {
 										goto l265
 									}
 									{
-										add(ruleAction12, position)
+										add(ruleAction7, position)
 									}
 									goto l254
 								l265:
@@ -2610,11 +2642,11 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position270, tokenIndex270
 									}
 								l271:
-									if !_rules[ruleDAYS]() {
+									if !_rules[ruleMINUTES]() {
 										goto l269
 									}
 									{
-										add(ruleAction13, position)
+										add(ruleAction8, position)
 									}
 									goto l254
 								l269:
@@ -2622,19 +2654,19 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l252
 									}
-									if !_rules[ruleDAYS]() {
+									if !_rules[ruleMINUTES]() {
 										goto l252
 									}
 									{
-										add(ruleAction14, position)
+										add(ruleAction9, position)
 									}
 								}
 							l254:
-								add(ruleRelativeDays, position253)
+								add(ruleRelativeMinutes, position253)
 							}
-							goto l205
+							goto l227
 						l252:
-							position, tokenIndex = position205, tokenIndex205
+							position, tokenIndex = position227, tokenIndex227
 							{
 								position275 := position
 								{
@@ -2642,14 +2674,14 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l277
 									}
-									if !_rules[ruleWEEKS]() {
+									if !_rules[ruleHOURS]() {
 										goto l277
 									}
 									if !_rules[ruleAGO]() {
 										goto l277
 									}
 									{
-										add(ruleAction15, position)
+										add(ruleAction10, position)
 									}
 									goto l276
 								l277:
@@ -2659,7 +2691,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										if !_rules[ruleNumber]() {
 											goto l281
 										}
-										if !_rules[ruleWEEKS]() {
+										if !_rules[ruleHOURS]() {
 											goto l281
 										}
 										if !_rules[ruleFROM_NOW]() {
@@ -2681,7 +2713,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 											position, tokenIndex = position282, tokenIndex282
 										}
 									l283:
-										if !_rules[ruleWEEKS]() {
+										if !_rules[ruleHOURS]() {
 											goto l279
 										}
 										{
@@ -2697,7 +2729,7 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									}
 								l280:
 									{
-										add(ruleAction16, position)
+										add(ruleAction11, position)
 									}
 									goto l276
 								l279:
@@ -2715,11 +2747,11 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position288, tokenIndex288
 									}
 								l289:
-									if !_rules[ruleWEEKS]() {
+									if !_rules[ruleHOURS]() {
 										goto l287
 									}
 									{
-										add(ruleAction17, position)
+										add(ruleAction12, position)
 									}
 									goto l276
 								l287:
@@ -2737,11 +2769,11 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 										position, tokenIndex = position292, tokenIndex292
 									}
 								l293:
-									if !_rules[ruleWEEKS]() {
+									if !_rules[ruleHOURS]() {
 										goto l291
 									}
 									{
-										add(ruleAction18, position)
+										add(ruleAction13, position)
 									}
 									goto l276
 								l291:
@@ -2749,694 +2781,948 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 									if !_rules[ruleNumber]() {
 										goto l274
 									}
-									if !_rules[ruleWEEKS]() {
+									if !_rules[ruleHOURS]() {
 										goto l274
 									}
 									{
-										add(ruleAction19, position)
+										add(ruleAction14, position)
 									}
 								}
 							l276:
-								add(ruleRelativeWeeks, position275)
+								add(ruleRelativeHours, position275)
 							}
-							goto l205
+							goto l227
 						l274:
-							position, tokenIndex = position205, tokenIndex205
+							position, tokenIndex = position227, tokenIndex227
 							{
 								position297 := position
 								{
 									position298, tokenIndex298 := position, tokenIndex
-									{
-										position300 := position
-										if buffer[position] != 't' {
-											goto l299
-										}
-										position++
-										if buffer[position] != 'o' {
-											goto l299
-										}
-										position++
-										if buffer[position] != 'd' {
-											goto l299
-										}
-										position++
-										if buffer[position] != 'a' {
-											goto l299
-										}
-										position++
-										if buffer[position] != 'y' {
-											goto l299
-										}
-										position++
-										_rules[rule_]()
-										add(ruleTODAY, position300)
+									if !_rules[ruleNumber]() {
+										goto l299
+									}
+									if !_rules[ruleDAYS]() {
+										goto l299
+									}
+									if !_rules[ruleAGO]() {
+										goto l299
 									}
 									{
-										add(ruleAction40, position)
+										add(ruleAction15, position)
 									}
 									goto l298
 								l299:
 									position, tokenIndex = position298, tokenIndex298
 									{
-										position303 := position
-										if buffer[position] != 't' {
-											goto l302
+										position302, tokenIndex302 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l303
 										}
-										position++
-										if buffer[position] != 'o' {
-											goto l302
+										if !_rules[ruleDAYS]() {
+											goto l303
 										}
-										position++
-										if buffer[position] != 'm' {
-											goto l302
+										if !_rules[ruleFROM_NOW]() {
+											goto l303
 										}
-										position++
-										if buffer[position] != 'o' {
-											goto l302
+										goto l302
+									l303:
+										position, tokenIndex = position302, tokenIndex302
+										if !_rules[ruleIn]() {
+											goto l301
 										}
-										position++
-										if buffer[position] != 'r' {
-											goto l302
+										{
+											position304, tokenIndex304 := position, tokenIndex
+											if !_rules[ruleNumber]() {
+												goto l304
+											}
+											goto l305
+										l304:
+											position, tokenIndex = position304, tokenIndex304
 										}
-										position++
-										if buffer[position] != 'r' {
-											goto l302
+									l305:
+										if !_rules[ruleDAYS]() {
+											goto l301
 										}
-										position++
-										if buffer[position] != 'o' {
-											goto l302
+										{
+											position306, tokenIndex306 := position, tokenIndex
+											if !_rules[ruleFROM_NOW]() {
+												goto l306
+											}
+											goto l307
+										l306:
+											position, tokenIndex = position306, tokenIndex306
 										}
-										position++
-										if buffer[position] != 'w' {
-											goto l302
-										}
-										position++
-										_rules[rule_]()
-										add(ruleTOMORROW, position303)
+									l307:
 									}
+								l302:
 									{
-										add(ruleAction42, position)
+										add(ruleAction16, position)
 									}
 									goto l298
-								l302:
+								l301:
 									position, tokenIndex = position298, tokenIndex298
-									{
-										switch buffer[position] {
-										case 'n':
-											if !_rules[ruleNEXT]() {
-												goto l296
-											}
-											if !_rules[ruleWeekday]() {
-												goto l296
-											}
-											{
-												add(ruleAction44, position)
-											}
-										case 'y':
-											{
-												position307 := position
-												position++
-												if buffer[position] != 'e' {
-													goto l296
-												}
-												position++
-												if buffer[position] != 's' {
-													goto l296
-												}
-												position++
-												if buffer[position] != 't' {
-													goto l296
-												}
-												position++
-												if buffer[position] != 'e' {
-													goto l296
-												}
-												position++
-												if buffer[position] != 'r' {
-													goto l296
-												}
-												position++
-												if buffer[position] != 'd' {
-													goto l296
-												}
-												position++
-												if buffer[position] != 'a' {
-													goto l296
-												}
-												position++
-												if buffer[position] != 'y' {
-													goto l296
-												}
-												position++
-												_rules[rule_]()
-												add(ruleYESTERDAY, position307)
-											}
-											{
-												add(ruleAction41, position)
-											}
-										case 'l', 'p':
-											if !_rules[ruleLAST]() {
-												goto l296
-											}
-											if !_rules[ruleWeekday]() {
-												goto l296
-											}
-											{
-												add(ruleAction43, position)
-											}
-										default:
-											if !_rules[ruleWeekday]() {
-												goto l296
-											}
-											{
-												add(ruleAction45, position)
-											}
-										}
+									if !_rules[ruleLast]() {
+										goto l309
 									}
-
+									{
+										position310, tokenIndex310 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l310
+										}
+										goto l311
+									l310:
+										position, tokenIndex = position310, tokenIndex310
+									}
+								l311:
+									if !_rules[ruleDAYS]() {
+										goto l309
+									}
+									{
+										add(ruleAction17, position)
+									}
+									goto l298
+								l309:
+									position, tokenIndex = position298, tokenIndex298
+									if !_rules[ruleNext]() {
+										goto l313
+									}
+									{
+										position314, tokenIndex314 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l314
+										}
+										goto l315
+									l314:
+										position, tokenIndex = position314, tokenIndex314
+									}
+								l315:
+									if !_rules[ruleDAYS]() {
+										goto l313
+									}
+									{
+										add(ruleAction18, position)
+									}
+									goto l298
+								l313:
+									position, tokenIndex = position298, tokenIndex298
+									if !_rules[ruleNumber]() {
+										goto l296
+									}
+									if !_rules[ruleDAYS]() {
+										goto l296
+									}
+									{
+										add(ruleAction19, position)
+									}
 								}
 							l298:
-								add(ruleRelativeWeekdays, position297)
+								add(ruleRelativeDays, position297)
 							}
-							goto l205
+							goto l227
 						l296:
-							position, tokenIndex = position205, tokenIndex205
+							position, tokenIndex = position227, tokenIndex227
 							{
-								position312 := position
+								position319 := position
 								{
-									position313, tokenIndex313 := position, tokenIndex
+									position320, tokenIndex320 := position, tokenIndex
 									if !_rules[ruleNumber]() {
-										goto l314
+										goto l321
 									}
-									if !_rules[ruleMONTHS]() {
-										goto l314
+									if !_rules[ruleWEEKS]() {
+										goto l321
 									}
 									if !_rules[ruleAGO]() {
-										goto l314
+										goto l321
 									}
 									{
 										add(ruleAction20, position)
 									}
-									goto l313
-								l314:
-									position, tokenIndex = position313, tokenIndex313
+									goto l320
+								l321:
+									position, tokenIndex = position320, tokenIndex320
 									{
-										position317, tokenIndex317 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l318
-										}
-										if !_rules[ruleMONTHS]() {
-											goto l318
-										}
-										if !_rules[ruleFROM_NOW]() {
-											goto l318
-										}
-										goto l317
-									l318:
-										position, tokenIndex = position317, tokenIndex317
-										if !_rules[ruleIn]() {
-											goto l316
-										}
-										{
-											position319, tokenIndex319 := position, tokenIndex
-											if !_rules[ruleNumber]() {
-												goto l319
-											}
-											goto l320
-										l319:
-											position, tokenIndex = position319, tokenIndex319
-										}
-									l320:
-										if !_rules[ruleMONTHS]() {
-											goto l316
-										}
-										{
-											position321, tokenIndex321 := position, tokenIndex
-											if !_rules[ruleFROM_NOW]() {
-												goto l321
-											}
-											goto l322
-										l321:
-											position, tokenIndex = position321, tokenIndex321
-										}
-									l322:
-									}
-								l317:
-									{
-										add(ruleAction21, position)
-									}
-									goto l313
-								l316:
-									position, tokenIndex = position313, tokenIndex313
-									if !_rules[ruleLast]() {
-										goto l324
-									}
-									{
-										position325, tokenIndex325 := position, tokenIndex
+										position324, tokenIndex324 := position, tokenIndex
 										if !_rules[ruleNumber]() {
 											goto l325
 										}
-										goto l326
-									l325:
-										position, tokenIndex = position325, tokenIndex325
-									}
-								l326:
-									if !_rules[ruleMONTHS]() {
+										if !_rules[ruleWEEKS]() {
+											goto l325
+										}
+										if !_rules[ruleFROM_NOW]() {
+											goto l325
+										}
 										goto l324
+									l325:
+										position, tokenIndex = position324, tokenIndex324
+										if !_rules[ruleIn]() {
+											goto l323
+										}
+										{
+											position326, tokenIndex326 := position, tokenIndex
+											if !_rules[ruleNumber]() {
+												goto l326
+											}
+											goto l327
+										l326:
+											position, tokenIndex = position326, tokenIndex326
+										}
+									l327:
+										if !_rules[ruleWEEKS]() {
+											goto l323
+										}
+										{
+											position328, tokenIndex328 := position, tokenIndex
+											if !_rules[ruleFROM_NOW]() {
+												goto l328
+											}
+											goto l329
+										l328:
+											position, tokenIndex = position328, tokenIndex328
+										}
+									l329:
+									}
+								l324:
+									{
+										add(ruleAction21, position)
+									}
+									goto l320
+								l323:
+									position, tokenIndex = position320, tokenIndex320
+									if !_rules[ruleLast]() {
+										goto l331
+									}
+									{
+										position332, tokenIndex332 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l332
+										}
+										goto l333
+									l332:
+										position, tokenIndex = position332, tokenIndex332
+									}
+								l333:
+									if !_rules[ruleWEEKS]() {
+										goto l331
 									}
 									{
 										add(ruleAction22, position)
 									}
-									goto l313
-								l324:
-									position, tokenIndex = position313, tokenIndex313
+									goto l320
+								l331:
+									position, tokenIndex = position320, tokenIndex320
 									if !_rules[ruleNext]() {
-										goto l328
+										goto l335
 									}
 									{
-										position329, tokenIndex329 := position, tokenIndex
+										position336, tokenIndex336 := position, tokenIndex
 										if !_rules[ruleNumber]() {
-											goto l329
+											goto l336
 										}
-										goto l330
-									l329:
-										position, tokenIndex = position329, tokenIndex329
+										goto l337
+									l336:
+										position, tokenIndex = position336, tokenIndex336
 									}
-								l330:
-									if !_rules[ruleMONTHS]() {
-										goto l328
+								l337:
+									if !_rules[ruleWEEKS]() {
+										goto l335
 									}
 									{
 										add(ruleAction23, position)
 									}
-									goto l313
-								l328:
-									position, tokenIndex = position313, tokenIndex313
-									if !_rules[ruleLAST]() {
-										goto l332
+									goto l320
+								l335:
+									position, tokenIndex = position320, tokenIndex320
+									if !_rules[ruleNumber]() {
+										goto l318
 									}
-									if !_rules[ruleMonth]() {
-										goto l332
+									if !_rules[ruleWEEKS]() {
+										goto l318
 									}
 									{
 										add(ruleAction24, position)
 									}
-									goto l313
-								l332:
-									position, tokenIndex = position313, tokenIndex313
-									if !_rules[ruleNEXT]() {
-										goto l334
-									}
-									if !_rules[ruleMonth]() {
-										goto l334
-									}
-									{
-										add(ruleAction25, position)
-									}
-									goto l313
-								l334:
-									position, tokenIndex = position313, tokenIndex313
-									if !_rules[ruleMonth]() {
-										goto l311
-									}
-									{
-										add(ruleAction26, position)
-									}
 								}
-							l313:
-								add(ruleRelativeMonth, position312)
+							l320:
+								add(ruleRelativeWeeks, position319)
 							}
-							goto l205
-						l311:
-							position, tokenIndex = position205, tokenIndex205
+							goto l227
+						l318:
+							position, tokenIndex = position227, tokenIndex227
 							{
-								position338 := position
+								position341 := position
 								{
-									position339, tokenIndex339 := position, tokenIndex
-									if !_rules[ruleNumber]() {
-										goto l340
-									}
-									if !_rules[ruleYEARS]() {
-										goto l340
-									}
-									if !_rules[ruleAGO]() {
-										goto l340
+									position342, tokenIndex342 := position, tokenIndex
+									{
+										position344 := position
+										if buffer[position] != 't' {
+											goto l343
+										}
+										position++
+										if buffer[position] != 'o' {
+											goto l343
+										}
+										position++
+										if buffer[position] != 'd' {
+											goto l343
+										}
+										position++
+										if buffer[position] != 'a' {
+											goto l343
+										}
+										position++
+										if buffer[position] != 'y' {
+											goto l343
+										}
+										position++
+										_rules[rule_]()
+										add(ruleTODAY, position344)
 									}
 									{
-										add(ruleAction27, position)
+										add(ruleAction45, position)
 									}
-									goto l339
-								l340:
-									position, tokenIndex = position339, tokenIndex339
-									{
-										position343, tokenIndex343 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l344
-										}
-										if !_rules[ruleYEARS]() {
-											goto l344
-										}
-										if !_rules[ruleFROM_NOW]() {
-											goto l344
-										}
-										goto l343
-									l344:
-										position, tokenIndex = position343, tokenIndex343
-										if !_rules[ruleIn]() {
-											goto l342
-										}
-										{
-											position345, tokenIndex345 := position, tokenIndex
-											if !_rules[ruleNumber]() {
-												goto l345
-											}
-											goto l346
-										l345:
-											position, tokenIndex = position345, tokenIndex345
-										}
-									l346:
-										if !_rules[ruleYEARS]() {
-											goto l342
-										}
-										{
-											position347, tokenIndex347 := position, tokenIndex
-											if !_rules[ruleFROM_NOW]() {
-												goto l347
-											}
-											goto l348
-										l347:
-											position, tokenIndex = position347, tokenIndex347
-										}
-									l348:
-									}
+									goto l342
 								l343:
+									position, tokenIndex = position342, tokenIndex342
 									{
-										add(ruleAction28, position)
-									}
-									goto l339
-								l342:
-									position, tokenIndex = position339, tokenIndex339
-									if !_rules[ruleLast]() {
-										goto l350
-									}
-									{
-										position351, tokenIndex351 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l351
+										position347 := position
+										if buffer[position] != 't' {
+											goto l346
 										}
-										goto l352
-									l351:
-										position, tokenIndex = position351, tokenIndex351
-									}
-								l352:
-									if !_rules[ruleYEARS]() {
-										goto l350
-									}
-									{
-										add(ruleAction29, position)
-									}
-									goto l339
-								l350:
-									position, tokenIndex = position339, tokenIndex339
-									if !_rules[ruleNext]() {
-										goto l354
-									}
-									{
-										position355, tokenIndex355 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l355
+										position++
+										if buffer[position] != 'o' {
+											goto l346
 										}
-										goto l356
-									l355:
-										position, tokenIndex = position355, tokenIndex355
-									}
-								l356:
-									if !_rules[ruleYEARS]() {
-										goto l354
-									}
-									{
-										add(ruleAction30, position)
-									}
-									goto l339
-								l354:
-									position, tokenIndex = position339, tokenIndex339
-									if !_rules[ruleLAST]() {
-										goto l358
-									}
-									if !_rules[ruleYEARS]() {
-										goto l358
-									}
-									{
-										add(ruleAction31, position)
-									}
-									goto l339
-								l358:
-									position, tokenIndex = position339, tokenIndex339
-									if !_rules[ruleNEXT]() {
-										goto l337
-									}
-									if !_rules[ruleYEARS]() {
-										goto l337
+										position++
+										if buffer[position] != 'm' {
+											goto l346
+										}
+										position++
+										if buffer[position] != 'o' {
+											goto l346
+										}
+										position++
+										if buffer[position] != 'r' {
+											goto l346
+										}
+										position++
+										if buffer[position] != 'r' {
+											goto l346
+										}
+										position++
+										if buffer[position] != 'o' {
+											goto l346
+										}
+										position++
+										if buffer[position] != 'w' {
+											goto l346
+										}
+										position++
+										_rules[rule_]()
+										add(ruleTOMORROW, position347)
 									}
 									{
-										add(ruleAction32, position)
+										add(ruleAction47, position)
 									}
-								}
-							l339:
-								add(ruleRelativeYear, position338)
-							}
-							goto l205
-						l337:
-							position, tokenIndex = position205, tokenIndex205
-							{
-								position362 := position
-								{
-									position363, tokenIndex363 := position, tokenIndex
-									if !_rules[ruleNumber]() {
-										goto l364
-									}
+									goto l342
+								l346:
+									position, tokenIndex = position342, tokenIndex342
 									{
-										position365 := position
-										{
-											switch buffer[position] {
-											case 't':
+										switch buffer[position] {
+										case 'n':
+											if !_rules[ruleNEXT]() {
+												goto l340
+											}
+											if !_rules[ruleWeekday]() {
+												goto l340
+											}
+											{
+												add(ruleAction49, position)
+											}
+										case 'y':
+											{
+												position351 := position
 												position++
-												if buffer[position] != 'h' {
-													goto l364
+												if buffer[position] != 'e' {
+													goto l340
 												}
 												position++
-											case 'r':
-												position++
-												if buffer[position] != 'd' {
-													goto l364
-												}
-												position++
-											case 'n':
-												position++
-												if buffer[position] != 'd' {
-													goto l364
-												}
-												position++
-											default:
 												if buffer[position] != 's' {
-													goto l364
+													goto l340
 												}
 												position++
 												if buffer[position] != 't' {
-													goto l364
+													goto l340
 												}
 												position++
-											}
-										}
-
-										_rules[rule_]()
-										add(ruleOrdinal, position365)
-									}
-									goto l363
-								l364:
-									position, tokenIndex = position363, tokenIndex363
-									if !_rules[ruleLast]() {
-										goto l361
-									}
-									{
-										position367, tokenIndex367 := position, tokenIndex
-										if !_rules[ruleNumber]() {
-											goto l367
-										}
-										goto l368
-									l367:
-										position, tokenIndex = position367, tokenIndex367
-									}
-								l368:
-									if !_rules[ruleNumber]() {
-										goto l361
-									}
-								}
-							l363:
-								{
-									add(ruleAction46, position)
-								}
-								add(ruleDate, position362)
-							}
-							goto l205
-						l361:
-							position, tokenIndex = position205, tokenIndex205
-							{
-								position371 := position
-								{
-									position372, tokenIndex372 := position, tokenIndex
-									{
-										position374 := position
-										{
-											position375, tokenIndex375 := position, tokenIndex
-											if !_rules[ruleNumber]() {
-												goto l376
-											}
-											{
-												add(ruleAction47, position)
-											}
-											{
-												position378, tokenIndex378 := position, tokenIndex
-												if !_rules[ruleMinutes]() {
-													goto l378
+												if buffer[position] != 'e' {
+													goto l340
 												}
-												{
-													position380, tokenIndex380 := position, tokenIndex
-													if !_rules[ruleSeconds]() {
-														goto l380
-													}
-													goto l381
-												l380:
-													position, tokenIndex = position380, tokenIndex380
+												position++
+												if buffer[position] != 'r' {
+													goto l340
 												}
-											l381:
-												goto l379
-											l378:
-												position, tokenIndex = position378, tokenIndex378
-											}
-										l379:
-											{
-												position382 := position
+												position++
+												if buffer[position] != 'd' {
+													goto l340
+												}
+												position++
 												if buffer[position] != 'a' {
-													goto l376
+													goto l340
 												}
 												position++
-												if buffer[position] != 'm' {
-													goto l376
+												if buffer[position] != 'y' {
+													goto l340
 												}
 												position++
 												_rules[rule_]()
-												add(ruleAM, position382)
+												add(ruleYESTERDAY, position351)
 											}
-											goto l375
-										l376:
-											position, tokenIndex = position375, tokenIndex375
-											if !_rules[ruleNumber]() {
-												goto l373
+											{
+												add(ruleAction46, position)
+											}
+										case 'l', 'p':
+											if !_rules[ruleLAST]() {
+												goto l340
+											}
+											if !_rules[ruleWeekday]() {
+												goto l340
 											}
 											{
 												add(ruleAction48, position)
 											}
-											{
-												position384, tokenIndex384 := position, tokenIndex
-												if !_rules[ruleMinutes]() {
-													goto l384
-												}
-												{
-													position386, tokenIndex386 := position, tokenIndex
-													if !_rules[ruleSeconds]() {
-														goto l386
-													}
-													goto l387
-												l386:
-													position, tokenIndex = position386, tokenIndex386
-												}
-											l387:
-												goto l385
-											l384:
-												position, tokenIndex = position384, tokenIndex384
+										default:
+											if !_rules[ruleWeekday]() {
+												goto l340
 											}
-										l385:
 											{
-												position388 := position
-												if buffer[position] != 'p' {
-													goto l373
-												}
-												position++
-												if buffer[position] != 'm' {
-													goto l373
-												}
-												position++
-												_rules[rule_]()
-												add(rulePM, position388)
+												add(ruleAction50, position)
 											}
 										}
-									l375:
-										add(ruleClock12Hour, position374)
 									}
-									goto l372
-								l373:
-									position, tokenIndex = position372, tokenIndex372
+
+								}
+							l342:
+								add(ruleRelativeWeekdays, position341)
+							}
+							goto l227
+						l340:
+							position, tokenIndex = position227, tokenIndex227
+							{
+								position356 := position
+								{
+									position357, tokenIndex357 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l358
+									}
+									if !_rules[ruleMONTHS]() {
+										goto l358
+									}
+									if !_rules[ruleAGO]() {
+										goto l358
+									}
 									{
-										position389 := position
+										add(ruleAction25, position)
+									}
+									goto l357
+								l358:
+									position, tokenIndex = position357, tokenIndex357
+									{
+										position361, tokenIndex361 := position, tokenIndex
 										if !_rules[ruleNumber]() {
-											goto l370
+											goto l362
+										}
+										if !_rules[ruleMONTHS]() {
+											goto l362
+										}
+										if !_rules[ruleFROM_NOW]() {
+											goto l362
+										}
+										goto l361
+									l362:
+										position, tokenIndex = position361, tokenIndex361
+										if !_rules[ruleIn]() {
+											goto l360
 										}
 										{
-											add(ruleAction49, position)
+											position363, tokenIndex363 := position, tokenIndex
+											if !_rules[ruleNumber]() {
+												goto l363
+											}
+											goto l364
+										l363:
+											position, tokenIndex = position363, tokenIndex363
+										}
+									l364:
+										if !_rules[ruleMONTHS]() {
+											goto l360
+										}
+										{
+											position365, tokenIndex365 := position, tokenIndex
+											if !_rules[ruleFROM_NOW]() {
+												goto l365
+											}
+											goto l366
+										l365:
+											position, tokenIndex = position365, tokenIndex365
+										}
+									l366:
+									}
+								l361:
+									{
+										add(ruleAction26, position)
+									}
+									goto l357
+								l360:
+									position, tokenIndex = position357, tokenIndex357
+									if !_rules[ruleLast]() {
+										goto l368
+									}
+									{
+										position369, tokenIndex369 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l369
+										}
+										goto l370
+									l369:
+										position, tokenIndex = position369, tokenIndex369
+									}
+								l370:
+									if !_rules[ruleMONTHS]() {
+										goto l368
+									}
+									{
+										add(ruleAction27, position)
+									}
+									goto l357
+								l368:
+									position, tokenIndex = position357, tokenIndex357
+									if !_rules[ruleNext]() {
+										goto l372
+									}
+									{
+										position373, tokenIndex373 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l373
+										}
+										goto l374
+									l373:
+										position, tokenIndex = position373, tokenIndex373
+									}
+								l374:
+									if !_rules[ruleMONTHS]() {
+										goto l372
+									}
+									{
+										add(ruleAction28, position)
+									}
+									goto l357
+								l372:
+									position, tokenIndex = position357, tokenIndex357
+									if !_rules[ruleLAST]() {
+										goto l376
+									}
+									if !_rules[ruleMonth]() {
+										goto l376
+									}
+									{
+										add(ruleAction29, position)
+									}
+									goto l357
+								l376:
+									position, tokenIndex = position357, tokenIndex357
+									if !_rules[ruleNEXT]() {
+										goto l378
+									}
+									if !_rules[ruleMonth]() {
+										goto l378
+									}
+									{
+										add(ruleAction30, position)
+									}
+									goto l357
+								l378:
+									position, tokenIndex = position357, tokenIndex357
+									if !_rules[ruleMonth]() {
+										goto l355
+									}
+									{
+										add(ruleAction31, position)
+									}
+								}
+							l357:
+								add(ruleRelativeMonth, position356)
+							}
+							goto l227
+						l355:
+							position, tokenIndex = position227, tokenIndex227
+							{
+								position382 := position
+								{
+									position383, tokenIndex383 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l384
+									}
+									if !_rules[ruleYEARS]() {
+										goto l384
+									}
+									if !_rules[ruleAGO]() {
+										goto l384
+									}
+									{
+										add(ruleAction32, position)
+									}
+									goto l383
+								l384:
+									position, tokenIndex = position383, tokenIndex383
+									{
+										position387, tokenIndex387 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l388
+										}
+										if !_rules[ruleYEARS]() {
+											goto l388
+										}
+										if !_rules[ruleFROM_NOW]() {
+											goto l388
+										}
+										goto l387
+									l388:
+										position, tokenIndex = position387, tokenIndex387
+										if !_rules[ruleIn]() {
+											goto l386
+										}
+										{
+											position389, tokenIndex389 := position, tokenIndex
+											if !_rules[ruleNumber]() {
+												goto l389
+											}
+											goto l390
+										l389:
+											position, tokenIndex = position389, tokenIndex389
+										}
+									l390:
+										if !_rules[ruleYEARS]() {
+											goto l386
 										}
 										{
 											position391, tokenIndex391 := position, tokenIndex
-											if !_rules[ruleMinutes]() {
+											if !_rules[ruleFROM_NOW]() {
 												goto l391
 											}
-											{
-												position393, tokenIndex393 := position, tokenIndex
-												if !_rules[ruleSeconds]() {
-													goto l393
-												}
-												goto l394
-											l393:
-												position, tokenIndex = position393, tokenIndex393
-											}
-										l394:
 											goto l392
 										l391:
 											position, tokenIndex = position391, tokenIndex391
 										}
 									l392:
-										add(ruleClock24Hour, position389)
+									}
+								l387:
+									{
+										add(ruleAction33, position)
+									}
+									goto l383
+								l386:
+									position, tokenIndex = position383, tokenIndex383
+									if !_rules[ruleLast]() {
+										goto l394
+									}
+									{
+										position395, tokenIndex395 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l395
+										}
+										goto l396
+									l395:
+										position, tokenIndex = position395, tokenIndex395
+									}
+								l396:
+									if !_rules[ruleYEARS]() {
+										goto l394
+									}
+									{
+										add(ruleAction34, position)
+									}
+									goto l383
+								l394:
+									position, tokenIndex = position383, tokenIndex383
+									if !_rules[ruleNext]() {
+										goto l398
+									}
+									{
+										position399, tokenIndex399 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l399
+										}
+										goto l400
+									l399:
+										position, tokenIndex = position399, tokenIndex399
+									}
+								l400:
+									if !_rules[ruleYEARS]() {
+										goto l398
+									}
+									{
+										add(ruleAction35, position)
+									}
+									goto l383
+								l398:
+									position, tokenIndex = position383, tokenIndex383
+									if !_rules[ruleLAST]() {
+										goto l402
+									}
+									if !_rules[ruleYEARS]() {
+										goto l402
+									}
+									{
+										add(ruleAction36, position)
+									}
+									goto l383
+								l402:
+									position, tokenIndex = position383, tokenIndex383
+									if !_rules[ruleNEXT]() {
+										goto l381
+									}
+									if !_rules[ruleYEARS]() {
+										goto l381
+									}
+									{
+										add(ruleAction37, position)
 									}
 								}
-							l372:
-								add(ruleTime, position371)
+							l383:
+								add(ruleRelativeYear, position382)
 							}
-							goto l205
-						l370:
-							position, tokenIndex = position205, tokenIndex205
+							goto l227
+						l381:
+							position, tokenIndex = position227, tokenIndex227
 							{
-								position395 := position
+								position406 := position
+								{
+									position407, tokenIndex407 := position, tokenIndex
+									if !_rules[ruleNumber]() {
+										goto l408
+									}
+									{
+										position409 := position
+										{
+											switch buffer[position] {
+											case 't':
+												position++
+												if buffer[position] != 'h' {
+													goto l408
+												}
+												position++
+											case 'r':
+												position++
+												if buffer[position] != 'd' {
+													goto l408
+												}
+												position++
+											case 'n':
+												position++
+												if buffer[position] != 'd' {
+													goto l408
+												}
+												position++
+											default:
+												if buffer[position] != 's' {
+													goto l408
+												}
+												position++
+												if buffer[position] != 't' {
+													goto l408
+												}
+												position++
+											}
+										}
+
+										_rules[rule_]()
+										add(ruleOrdinal, position409)
+									}
+									goto l407
+								l408:
+									position, tokenIndex = position407, tokenIndex407
+									if !_rules[ruleLast]() {
+										goto l405
+									}
+									{
+										position411, tokenIndex411 := position, tokenIndex
+										if !_rules[ruleNumber]() {
+											goto l411
+										}
+										goto l412
+									l411:
+										position, tokenIndex = position411, tokenIndex411
+									}
+								l412:
+									if !_rules[ruleNumber]() {
+										goto l405
+									}
+								}
+							l407:
+								{
+									add(ruleAction51, position)
+								}
+								add(ruleDate, position406)
+							}
+							goto l227
+						l405:
+							position, tokenIndex = position227, tokenIndex227
+							{
+								position415 := position
+								{
+									position416, tokenIndex416 := position, tokenIndex
+									{
+										position418 := position
+										{
+											position419, tokenIndex419 := position, tokenIndex
+											if !_rules[ruleNumber]() {
+												goto l420
+											}
+											{
+												add(ruleAction52, position)
+											}
+											{
+												position422, tokenIndex422 := position, tokenIndex
+												if !_rules[ruleMinutes]() {
+													goto l422
+												}
+												{
+													position424, tokenIndex424 := position, tokenIndex
+													if !_rules[ruleSeconds]() {
+														goto l424
+													}
+													goto l425
+												l424:
+													position, tokenIndex = position424, tokenIndex424
+												}
+											l425:
+												goto l423
+											l422:
+												position, tokenIndex = position422, tokenIndex422
+											}
+										l423:
+											{
+												position426 := position
+												if buffer[position] != 'a' {
+													goto l420
+												}
+												position++
+												if buffer[position] != 'm' {
+													goto l420
+												}
+												position++
+												_rules[rule_]()
+												add(ruleAM, position426)
+											}
+											goto l419
+										l420:
+											position, tokenIndex = position419, tokenIndex419
+											if !_rules[ruleNumber]() {
+												goto l417
+											}
+											{
+												add(ruleAction53, position)
+											}
+											{
+												position428, tokenIndex428 := position, tokenIndex
+												if !_rules[ruleMinutes]() {
+													goto l428
+												}
+												{
+													position430, tokenIndex430 := position, tokenIndex
+													if !_rules[ruleSeconds]() {
+														goto l430
+													}
+													goto l431
+												l430:
+													position, tokenIndex = position430, tokenIndex430
+												}
+											l431:
+												goto l429
+											l428:
+												position, tokenIndex = position428, tokenIndex428
+											}
+										l429:
+											{
+												position432 := position
+												if buffer[position] != 'p' {
+													goto l417
+												}
+												position++
+												if buffer[position] != 'm' {
+													goto l417
+												}
+												position++
+												_rules[rule_]()
+												add(rulePM, position432)
+											}
+										}
+									l419:
+										add(ruleClock12Hour, position418)
+									}
+									goto l416
+								l417:
+									position, tokenIndex = position416, tokenIndex416
+									{
+										position433 := position
+										if !_rules[ruleNumber]() {
+											goto l414
+										}
+										{
+											add(ruleAction54, position)
+										}
+										{
+											position435, tokenIndex435 := position, tokenIndex
+											if !_rules[ruleMinutes]() {
+												goto l435
+											}
+											{
+												position437, tokenIndex437 := position, tokenIndex
+												if !_rules[ruleSeconds]() {
+													goto l437
+												}
+												goto l438
+											l437:
+												position, tokenIndex = position437, tokenIndex437
+											}
+										l438:
+											goto l436
+										l435:
+											position, tokenIndex = position435, tokenIndex435
+										}
+									l436:
+										add(ruleClock24Hour, position433)
+									}
+								}
+							l416:
+								add(ruleTime, position415)
+							}
+							goto l227
+						l414:
+							position, tokenIndex = position227, tokenIndex227
+							{
+								position439 := position
 								if c := buffer[position]; c < 'a' || c > 'z' {
 									goto l9
 								}
 								position++
-							l396:
+							l440:
 								{
-									position397, tokenIndex397 := position, tokenIndex
+									position441, tokenIndex441 := position, tokenIndex
 									if c := buffer[position]; c < 'a' || c > 'z' {
-										goto l397
+										goto l441
 									}
 									position++
-									goto l396
-								l397:
-									position, tokenIndex = position397, tokenIndex397
+									goto l440
+								l441:
+									position, tokenIndex = position441, tokenIndex441
 								}
 								_rules[rule_]()
-								add(ruleWord, position395)
+								add(ruleWord, position439)
 							}
 						}
-					l205:
-						add(ruleExpr, position204)
+					l227:
+						add(ruleExpr, position226)
 					}
 					goto l8
 				l9:
@@ -3459,1958 +3745,1974 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 			if memoized, ok := memoization[memoKey[U]{2, position}]; ok {
 				return memoizedResult(memoized)
 			}
-			position398, tokenIndex398 := position, tokenIndex
+			position442, tokenIndex442 := position, tokenIndex
 			{
-				position399 := position
+				position443 := position
 				_rules[rule_]()
 				{
-					position402 := position
+					position446 := position
 					if !_rules[ruleDurationTerm]() {
-						goto l398
+						goto l442
 					}
-				l403:
+				l447:
 					{
-						position404, tokenIndex404 := position, tokenIndex
+						position448, tokenIndex448 := position, tokenIndex
 						{
-							position405, tokenIndex405 := position, tokenIndex
+							position449, tokenIndex449 := position, tokenIndex
 							_rules[rule_]()
 							{
-								position407 := position
+								position451 := position
 								if buffer[position] != 'a' {
-									goto l406
+									goto l450
 								}
 								position++
 								if buffer[position] != 'n' {
-									goto l406
+									goto l450
 								}
 								position++
 								if buffer[position] != 'd' {
-									goto l406
+									goto l450
 								}
 								position++
 								_rules[rule_]()
-								add(ruleAND, position407)
+								add(ruleAND, position451)
 							}
 							_rules[rule_]()
-							goto l405
-						l406:
-							position, tokenIndex = position405, tokenIndex405
+							goto l449
+						l450:
+							position, tokenIndex = position449, tokenIndex449
 							_rules[rule_]()
 						}
-					l405:
+					l449:
 						if !_rules[ruleDurationTerm]() {
-							goto l404
+							goto l448
 						}
-						goto l403
-					l404:
-						position, tokenIndex = position404, tokenIndex404
+						goto l447
+					l448:
+						position, tokenIndex = position448, tokenIndex448
 					}
-					add(ruleDurationExpr, position402)
+					add(ruleDurationExpr, position446)
 				}
-			l400:
+			l444:
 				{
-					position401, tokenIndex401 := position, tokenIndex
+					position445, tokenIndex445 := position, tokenIndex
 					{
-						position408 := position
+						position452 := position
 						if !_rules[ruleDurationTerm]() {
-							goto l401
+							goto l445
 						}
-					l409:
+					l453:
 						{
-							position410, tokenIndex410 := position, tokenIndex
+							position454, tokenIndex454 := position, tokenIndex
 							{
-								position411, tokenIndex411 := position, tokenIndex
+								position455, tokenIndex455 := position, tokenIndex
 								_rules[rule_]()
 								{
-									position413 := position
+									position457 := position
 									if buffer[position] != 'a' {
-										goto l412
+										goto l456
 									}
 									position++
 									if buffer[position] != 'n' {
-										goto l412
+										goto l456
 									}
 									position++
 									if buffer[position] != 'd' {
-										goto l412
+										goto l456
 									}
 									position++
 									_rules[rule_]()
-									add(ruleAND, position413)
+									add(ruleAND, position457)
 								}
 								_rules[rule_]()
-								goto l411
-							l412:
-								position, tokenIndex = position411, tokenIndex411
+								goto l455
+							l456:
+								position, tokenIndex = position455, tokenIndex455
 								_rules[rule_]()
 							}
-						l411:
+						l455:
 							if !_rules[ruleDurationTerm]() {
-								goto l410
+								goto l454
 							}
-							goto l409
-						l410:
-							position, tokenIndex = position410, tokenIndex410
+							goto l453
+						l454:
+							position, tokenIndex = position454, tokenIndex454
 						}
-						add(ruleDurationExpr, position408)
+						add(ruleDurationExpr, position452)
 					}
-					goto l400
-				l401:
-					position, tokenIndex = position401, tokenIndex401
+					goto l444
+				l445:
+					position, tokenIndex = position445, tokenIndex445
 				}
 				if !_rules[ruleEOF]() {
-					goto l398
+					goto l442
 				}
-				add(ruleDurationQuery, position399)
+				add(ruleDurationQuery, position443)
 			}
-			memoize(2, position398, tokenIndex398, true)
+			memoize(2, position442, tokenIndex442, true)
 			return true
-		l398:
-			memoize(2, position398, tokenIndex398, false)
-			position, tokenIndex = position398, tokenIndex398
+		l442:
+			memoize(2, position442, tokenIndex442, false)
+			position, tokenIndex = position442, tokenIndex442
 			return false
 		},
-		/* 3 Expr <- <(NOW / RelativeMinutes / RelativeHours / RelativeDays / RelativeWeeks / RelativeWeekdays / RelativeMonth / RelativeYear / Date / Time / Word)> */
+		/* 3 Expr <- <(NOW / RelativeSeconds / RelativeMinutes / RelativeHours / RelativeDays / RelativeWeeks / RelativeWeekdays / RelativeMonth / RelativeYear / Date / Time / Word)> */
 		nil,
-		/* 4 RelativeMinutes <- <((Number MINUTES AGO Action0) / (((Number MINUTES FROM_NOW) / (In Number? MINUTES FROM_NOW?)) Action1) / (Last Number? MINUTES Action2) / (Next Number? MINUTES Action3) / (Number MINUTES Action4))> */
+		/* 4 RelativeSeconds <- <((Number SECONDS AGO Action0) / (((Number SECONDS FROM_NOW) / (In Number? SECONDS FROM_NOW?)) Action1) / (Last Number? SECONDS Action2) / (Next Number? SECONDS Action3) / (Number SECONDS Action4))> */
 		nil,
-		/* 5 RelativeHours <- <((Number HOURS AGO Action5) / (((Number HOURS FROM_NOW) / (In Number? HOURS FROM_NOW?)) Action6) / (Last Number? HOURS Action7) / (Next Number? HOURS Action8) / (Number HOURS Action9))> */
+		/* 5 RelativeMinutes <- <((Number MINUTES AGO Action5) / (((Number MINUTES FROM_NOW) / (In Number? MINUTES FROM_NOW?)) Action6) / (Last Number? MINUTES Action7) / (Next Number? MINUTES Action8) / (Number MINUTES Action9))> */
 		nil,
-		/* 6 RelativeDays <- <((Number DAYS AGO Action10) / (((Number DAYS FROM_NOW) / (In Number? DAYS FROM_NOW?)) Action11) / (Last Number? DAYS Action12) / (Next Number? DAYS Action13) / (Number DAYS Action14))> */
+		/* 6 RelativeHours <- <((Number HOURS AGO Action10) / (((Number HOURS FROM_NOW) / (In Number? HOURS FROM_NOW?)) Action11) / (Last Number? HOURS Action12) / (Next Number? HOURS Action13) / (Number HOURS Action14))> */
 		nil,
-		/* 7 RelativeWeeks <- <((Number WEEKS AGO Action15) / (((Number WEEKS FROM_NOW) / (In Number? WEEKS FROM_NOW?)) Action16) / (Last Number? WEEKS Action17) / (Next Number? WEEKS Action18) / (Number WEEKS Action19))> */
+		/* 7 RelativeDays <- <((Number DAYS AGO Action15) / (((Number DAYS FROM_NOW) / (In Number? DAYS FROM_NOW?)) Action16) / (Last Number? DAYS Action17) / (Next Number? DAYS Action18) / (Number DAYS Action19))> */
 		nil,
-		/* 8 RelativeMonth <- <((Number MONTHS AGO Action20) / (((Number MONTHS FROM_NOW) / (In Number? MONTHS FROM_NOW?)) Action21) / (Last Number? MONTHS Action22) / (Next Number? MONTHS Action23) / (LAST Month Action24) / (NEXT Month Action25) / (Month Action26))> */
+		/* 8 RelativeWeeks <- <((Number WEEKS AGO Action20) / (((Number WEEKS FROM_NOW) / (In Number? WEEKS FROM_NOW?)) Action21) / (Last Number? WEEKS Action22) / (Next Number? WEEKS Action23) / (Number WEEKS Action24))> */
 		nil,
-		/* 9 RelativeYear <- <((Number YEARS AGO Action27) / (((Number YEARS FROM_NOW) / (In Number? YEARS FROM_NOW?)) Action28) / (Last Number? YEARS Action29) / (Next Number? YEARS Action30) / (LAST YEARS Action31) / (NEXT YEARS Action32))> */
+		/* 9 RelativeMonth <- <((Number MONTHS AGO Action25) / (((Number MONTHS FROM_NOW) / (In Number? MONTHS FROM_NOW?)) Action26) / (Last Number? MONTHS Action27) / (Next Number? MONTHS Action28) / (LAST Month Action29) / (NEXT Month Action30) / (Month Action31))> */
 		nil,
-		/* 10 DurationExpr <- <(DurationTerm (((_ AND _) / _) DurationTerm)*)> */
+		/* 10 RelativeYear <- <((Number YEARS AGO Action32) / (((Number YEARS FROM_NOW) / (In Number? YEARS FROM_NOW?)) Action33) / (Last Number? YEARS Action34) / (Next Number? YEARS Action35) / (LAST YEARS Action36) / (NEXT YEARS Action37))> */
 		nil,
-		/* 11 DurationTerm <- <((Number _ YEARS Action33) / (Number _ MONTHS Action34) / (Number _ WEEKS Action35) / (Number _ DAYS Action36) / (Number _ HOURS Action37) / (Number _ MINUTES Action38) / (Number _ SECONDS Action39))> */
+		/* 11 DurationExpr <- <(DurationTerm (((_ AND _) / _) DurationTerm)*)> */
+		nil,
+		/* 12 DurationTerm <- <((Number _ YEARS Action38) / (Number _ MONTHS Action39) / (Number _ WEEKS Action40) / (Number _ DAYS Action41) / (Number _ HOURS Action42) / (Number _ MINUTES Action43) / (Number _ SECONDS Action44))> */
 		func() bool {
-			if memoized, ok := memoization[memoKey[U]{11, position}]; ok {
+			if memoized, ok := memoization[memoKey[U]{12, position}]; ok {
 				return memoizedResult(memoized)
 			}
-			position422, tokenIndex422 := position, tokenIndex
+			position467, tokenIndex467 := position, tokenIndex
 			{
-				position423 := position
+				position468 := position
 				{
-					position424, tokenIndex424 := position, tokenIndex
+					position469, tokenIndex469 := position, tokenIndex
 					if !_rules[ruleNumber]() {
-						goto l425
+						goto l470
 					}
 					_rules[rule_]()
 					if !_rules[ruleYEARS]() {
-						goto l425
-					}
-					{
-						add(ruleAction33, position)
-					}
-					goto l424
-				l425:
-					position, tokenIndex = position424, tokenIndex424
-					if !_rules[ruleNumber]() {
-						goto l427
-					}
-					_rules[rule_]()
-					if !_rules[ruleMONTHS]() {
-						goto l427
-					}
-					{
-						add(ruleAction34, position)
-					}
-					goto l424
-				l427:
-					position, tokenIndex = position424, tokenIndex424
-					if !_rules[ruleNumber]() {
-						goto l429
-					}
-					_rules[rule_]()
-					if !_rules[ruleWEEKS]() {
-						goto l429
-					}
-					{
-						add(ruleAction35, position)
-					}
-					goto l424
-				l429:
-					position, tokenIndex = position424, tokenIndex424
-					if !_rules[ruleNumber]() {
-						goto l431
-					}
-					_rules[rule_]()
-					if !_rules[ruleDAYS]() {
-						goto l431
-					}
-					{
-						add(ruleAction36, position)
-					}
-					goto l424
-				l431:
-					position, tokenIndex = position424, tokenIndex424
-					if !_rules[ruleNumber]() {
-						goto l433
-					}
-					_rules[rule_]()
-					if !_rules[ruleHOURS]() {
-						goto l433
-					}
-					{
-						add(ruleAction37, position)
-					}
-					goto l424
-				l433:
-					position, tokenIndex = position424, tokenIndex424
-					if !_rules[ruleNumber]() {
-						goto l435
-					}
-					_rules[rule_]()
-					if !_rules[ruleMINUTES]() {
-						goto l435
+						goto l470
 					}
 					{
 						add(ruleAction38, position)
 					}
-					goto l424
-				l435:
-					position, tokenIndex = position424, tokenIndex424
+					goto l469
+				l470:
+					position, tokenIndex = position469, tokenIndex469
 					if !_rules[ruleNumber]() {
-						goto l422
+						goto l472
 					}
 					_rules[rule_]()
-					{
-						position437 := position
-						if buffer[position] != 's' {
-							goto l422
-						}
-						position++
-						if buffer[position] != 'e' {
-							goto l422
-						}
-						position++
-						if buffer[position] != 'c' {
-							goto l422
-						}
-						position++
-						if buffer[position] != 'o' {
-							goto l422
-						}
-						position++
-						if buffer[position] != 'n' {
-							goto l422
-						}
-						position++
-						if buffer[position] != 'd' {
-							goto l422
-						}
-						position++
-						{
-							position438, tokenIndex438 := position, tokenIndex
-							if buffer[position] != 's' {
-								goto l438
-							}
-							position++
-							goto l439
-						l438:
-							position, tokenIndex = position438, tokenIndex438
-						}
-					l439:
-						_rules[rule_]()
-						add(ruleSECONDS, position437)
+					if !_rules[ruleMONTHS]() {
+						goto l472
 					}
 					{
 						add(ruleAction39, position)
 					}
+					goto l469
+				l472:
+					position, tokenIndex = position469, tokenIndex469
+					if !_rules[ruleNumber]() {
+						goto l474
+					}
+					_rules[rule_]()
+					if !_rules[ruleWEEKS]() {
+						goto l474
+					}
+					{
+						add(ruleAction40, position)
+					}
+					goto l469
+				l474:
+					position, tokenIndex = position469, tokenIndex469
+					if !_rules[ruleNumber]() {
+						goto l476
+					}
+					_rules[rule_]()
+					if !_rules[ruleDAYS]() {
+						goto l476
+					}
+					{
+						add(ruleAction41, position)
+					}
+					goto l469
+				l476:
+					position, tokenIndex = position469, tokenIndex469
+					if !_rules[ruleNumber]() {
+						goto l478
+					}
+					_rules[rule_]()
+					if !_rules[ruleHOURS]() {
+						goto l478
+					}
+					{
+						add(ruleAction42, position)
+					}
+					goto l469
+				l478:
+					position, tokenIndex = position469, tokenIndex469
+					if !_rules[ruleNumber]() {
+						goto l480
+					}
+					_rules[rule_]()
+					if !_rules[ruleMINUTES]() {
+						goto l480
+					}
+					{
+						add(ruleAction43, position)
+					}
+					goto l469
+				l480:
+					position, tokenIndex = position469, tokenIndex469
+					if !_rules[ruleNumber]() {
+						goto l467
+					}
+					_rules[rule_]()
+					if !_rules[ruleSECONDS]() {
+						goto l467
+					}
+					{
+						add(ruleAction44, position)
+					}
 				}
-			l424:
-				add(ruleDurationTerm, position423)
+			l469:
+				add(ruleDurationTerm, position468)
 			}
-			memoize(11, position422, tokenIndex422, true)
+			memoize(12, position467, tokenIndex467, true)
 			return true
-		l422:
-			memoize(11, position422, tokenIndex422, false)
-			position, tokenIndex = position422, tokenIndex422
+		l467:
+			memoize(12, position467, tokenIndex467, false)
+			position, tokenIndex = position467, tokenIndex467
 			return false
 		},
-		/* 12 RelativeWeekdays <- <((TODAY Action40) / (TOMORROW Action42) / ((&('n') (NEXT Weekday Action44)) | (&('y') (YESTERDAY Action41)) | (&('l' | 'p') (LAST Weekday Action43)) | (&('f' | 'm' | 's' | 't' | 'w') (Weekday Action45))))> */
+		/* 13 RelativeWeekdays <- <((TODAY Action45) / (TOMORROW Action47) / ((&('n') (NEXT Weekday Action49)) | (&('y') (YESTERDAY Action46)) | (&('l' | 'p') (LAST Weekday Action48)) | (&('f' | 'm' | 's' | 't' | 'w') (Weekday Action50))))> */
 		nil,
-		/* 13 Date <- <(((Number Ordinal) / (Last Number? Number)) Action46)> */
+		/* 14 Date <- <(((Number Ordinal) / (Last Number? Number)) Action51)> */
 		nil,
-		/* 14 Time <- <(Clock12Hour / Clock24Hour)> */
+		/* 15 Time <- <(Clock12Hour / Clock24Hour)> */
 		nil,
-		/* 15 Clock12Hour <- <((Number Action47 (Minutes Seconds?)? AM) / (Number Action48 (Minutes Seconds?)? PM))> */
+		/* 16 Clock12Hour <- <((Number Action52 (Minutes Seconds?)? AM) / (Number Action53 (Minutes Seconds?)? PM))> */
 		nil,
-		/* 16 Clock24Hour <- <(Number Action49 (Minutes Seconds?)?)> */
+		/* 17 Clock24Hour <- <(Number Action54 (Minutes Seconds?)?)> */
 		nil,
-		/* 17 Minutes <- <(':' Number Action50)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{17, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position446, tokenIndex446 := position, tokenIndex
-			{
-				position447 := position
-				if buffer[position] != ':' {
-					goto l446
-				}
-				position++
-				if !_rules[ruleNumber]() {
-					goto l446
-				}
-				{
-					add(ruleAction50, position)
-				}
-				add(ruleMinutes, position447)
-			}
-			memoize(17, position446, tokenIndex446, true)
-			return true
-		l446:
-			memoize(17, position446, tokenIndex446, false)
-			position, tokenIndex = position446, tokenIndex446
-			return false
-		},
-		/* 18 Seconds <- <(':' Number Action51)> */
+		/* 18 Minutes <- <(':' Number Action55)> */
 		func() bool {
 			if memoized, ok := memoization[memoKey[U]{18, position}]; ok {
 				return memoizedResult(memoized)
 			}
-			position449, tokenIndex449 := position, tokenIndex
+			position488, tokenIndex488 := position, tokenIndex
 			{
-				position450 := position
+				position489 := position
 				if buffer[position] != ':' {
-					goto l449
+					goto l488
 				}
 				position++
 				if !_rules[ruleNumber]() {
-					goto l449
+					goto l488
 				}
 				{
-					add(ruleAction51, position)
+					add(ruleAction55, position)
 				}
-				add(ruleSeconds, position450)
+				add(ruleMinutes, position489)
 			}
-			memoize(18, position449, tokenIndex449, true)
+			memoize(18, position488, tokenIndex488, true)
 			return true
-		l449:
-			memoize(18, position449, tokenIndex449, false)
-			position, tokenIndex = position449, tokenIndex449
+		l488:
+			memoize(18, position488, tokenIndex488, false)
+			position, tokenIndex = position488, tokenIndex488
 			return false
 		},
-		/* 19 Number <- <(('t' 'w' 'o' _ Action54) / ('t' 'h' 'r' 'e' 'e' _ Action55) / ('f' 'o' 'u' 'r' _ Action56) / ('s' 'i' 'x' _ Action58) / ('e' 'i' 'g' 'h' 't' _ Action60) / ('t' 'e' 'n' _ Action62) / ('a' 'n' ![a-z] _ Action65) / ((&('a') ('a' ![a-z] _ Action66)) | (&('t') ('t' 'w' 'e' 'l' 'v' 'e' _ Action64)) | (&('e') ('e' 'l' 'e' 'v' 'e' 'n' _ Action63)) | (&('n') ('n' 'i' 'n' 'e' _ Action61)) | (&('s') ('s' 'e' 'v' 'e' 'n' _ Action59)) | (&('f') ('f' 'i' 'v' 'e' _ Action57)) | (&('o') ('o' 'n' 'e' _ Action53)) | (&('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9') (<[0-9]+> _ Action52))))> */
+		/* 19 Seconds <- <(':' Number Action56)> */
 		func() bool {
 			if memoized, ok := memoization[memoKey[U]{19, position}]; ok {
 				return memoizedResult(memoized)
 			}
-			position452, tokenIndex452 := position, tokenIndex
+			position491, tokenIndex491 := position, tokenIndex
 			{
-				position453 := position
+				position492 := position
+				if buffer[position] != ':' {
+					goto l491
+				}
+				position++
+				if !_rules[ruleNumber]() {
+					goto l491
+				}
 				{
-					position454, tokenIndex454 := position, tokenIndex
+					add(ruleAction56, position)
+				}
+				add(ruleSeconds, position492)
+			}
+			memoize(19, position491, tokenIndex491, true)
+			return true
+		l491:
+			memoize(19, position491, tokenIndex491, false)
+			position, tokenIndex = position491, tokenIndex491
+			return false
+		},
+		/* 20 Number <- <(('t' 'w' 'o' _ Action59) / ('t' 'h' 'r' 'e' 'e' _ Action60) / ('f' 'o' 'u' 'r' _ Action61) / ('s' 'i' 'x' _ Action63) / ('e' 'i' 'g' 'h' 't' _ Action65) / ('t' 'e' 'n' _ Action67) / ('a' 'n' ![a-z] _ Action70) / ((&('a') ('a' ![a-z] _ Action71)) | (&('t') ('t' 'w' 'e' 'l' 'v' 'e' _ Action69)) | (&('e') ('e' 'l' 'e' 'v' 'e' 'n' _ Action68)) | (&('n') ('n' 'i' 'n' 'e' _ Action66)) | (&('s') ('s' 'e' 'v' 'e' 'n' _ Action64)) | (&('f') ('f' 'i' 'v' 'e' _ Action62)) | (&('o') ('o' 'n' 'e' _ Action58)) | (&('0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9') (<[0-9]+> _ Action57))))> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{20, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position494, tokenIndex494 := position, tokenIndex
+			{
+				position495 := position
+				{
+					position496, tokenIndex496 := position, tokenIndex
 					if buffer[position] != 't' {
-						goto l455
+						goto l497
 					}
 					position++
 					if buffer[position] != 'w' {
-						goto l455
+						goto l497
 					}
 					position++
 					if buffer[position] != 'o' {
-						goto l455
+						goto l497
 					}
 					position++
 					_rules[rule_]()
 					{
-						add(ruleAction54, position)
+						add(ruleAction59, position)
 					}
-					goto l454
-				l455:
-					position, tokenIndex = position454, tokenIndex454
+					goto l496
+				l497:
+					position, tokenIndex = position496, tokenIndex496
 					if buffer[position] != 't' {
-						goto l457
+						goto l499
 					}
 					position++
 					if buffer[position] != 'h' {
-						goto l457
+						goto l499
 					}
 					position++
 					if buffer[position] != 'r' {
-						goto l457
+						goto l499
 					}
 					position++
 					if buffer[position] != 'e' {
-						goto l457
+						goto l499
 					}
 					position++
 					if buffer[position] != 'e' {
-						goto l457
-					}
-					position++
-					_rules[rule_]()
-					{
-						add(ruleAction55, position)
-					}
-					goto l454
-				l457:
-					position, tokenIndex = position454, tokenIndex454
-					if buffer[position] != 'f' {
-						goto l459
-					}
-					position++
-					if buffer[position] != 'o' {
-						goto l459
-					}
-					position++
-					if buffer[position] != 'u' {
-						goto l459
-					}
-					position++
-					if buffer[position] != 'r' {
-						goto l459
-					}
-					position++
-					_rules[rule_]()
-					{
-						add(ruleAction56, position)
-					}
-					goto l454
-				l459:
-					position, tokenIndex = position454, tokenIndex454
-					if buffer[position] != 's' {
-						goto l461
-					}
-					position++
-					if buffer[position] != 'i' {
-						goto l461
-					}
-					position++
-					if buffer[position] != 'x' {
-						goto l461
-					}
-					position++
-					_rules[rule_]()
-					{
-						add(ruleAction58, position)
-					}
-					goto l454
-				l461:
-					position, tokenIndex = position454, tokenIndex454
-					if buffer[position] != 'e' {
-						goto l463
-					}
-					position++
-					if buffer[position] != 'i' {
-						goto l463
-					}
-					position++
-					if buffer[position] != 'g' {
-						goto l463
-					}
-					position++
-					if buffer[position] != 'h' {
-						goto l463
-					}
-					position++
-					if buffer[position] != 't' {
-						goto l463
+						goto l499
 					}
 					position++
 					_rules[rule_]()
 					{
 						add(ruleAction60, position)
 					}
-					goto l454
-				l463:
-					position, tokenIndex = position454, tokenIndex454
-					if buffer[position] != 't' {
-						goto l465
+					goto l496
+				l499:
+					position, tokenIndex = position496, tokenIndex496
+					if buffer[position] != 'f' {
+						goto l501
 					}
 					position++
-					if buffer[position] != 'e' {
-						goto l465
+					if buffer[position] != 'o' {
+						goto l501
 					}
 					position++
-					if buffer[position] != 'n' {
-						goto l465
+					if buffer[position] != 'u' {
+						goto l501
+					}
+					position++
+					if buffer[position] != 'r' {
+						goto l501
 					}
 					position++
 					_rules[rule_]()
 					{
-						add(ruleAction62, position)
+						add(ruleAction61, position)
 					}
-					goto l454
-				l465:
-					position, tokenIndex = position454, tokenIndex454
-					if buffer[position] != 'a' {
-						goto l467
-					}
-					position++
-					if buffer[position] != 'n' {
-						goto l467
+					goto l496
+				l501:
+					position, tokenIndex = position496, tokenIndex496
+					if buffer[position] != 's' {
+						goto l503
 					}
 					position++
+					if buffer[position] != 'i' {
+						goto l503
+					}
+					position++
+					if buffer[position] != 'x' {
+						goto l503
+					}
+					position++
+					_rules[rule_]()
 					{
-						position468, tokenIndex468 := position, tokenIndex
-						if c := buffer[position]; c < 'a' || c > 'z' {
-							goto l468
-						}
-						position++
-						goto l467
-					l468:
-						position, tokenIndex = position468, tokenIndex468
+						add(ruleAction63, position)
 					}
+					goto l496
+				l503:
+					position, tokenIndex = position496, tokenIndex496
+					if buffer[position] != 'e' {
+						goto l505
+					}
+					position++
+					if buffer[position] != 'i' {
+						goto l505
+					}
+					position++
+					if buffer[position] != 'g' {
+						goto l505
+					}
+					position++
+					if buffer[position] != 'h' {
+						goto l505
+					}
+					position++
+					if buffer[position] != 't' {
+						goto l505
+					}
+					position++
 					_rules[rule_]()
 					{
 						add(ruleAction65, position)
 					}
-					goto l454
-				l467:
-					position, tokenIndex = position454, tokenIndex454
-					{
-						switch buffer[position] {
-						case 'a':
-							position++
-							{
-								position471, tokenIndex471 := position, tokenIndex
-								if c := buffer[position]; c < 'a' || c > 'z' {
-									goto l471
-								}
-								position++
-								goto l452
-							l471:
-								position, tokenIndex = position471, tokenIndex471
-							}
-							_rules[rule_]()
-							{
-								add(ruleAction66, position)
-							}
-						case 't':
-							position++
-							if buffer[position] != 'w' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'l' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'v' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction64, position)
-							}
-						case 'e':
-							position++
-							if buffer[position] != 'l' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'v' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'n' {
-								goto l452
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction63, position)
-							}
-						case 'n':
-							position++
-							if buffer[position] != 'i' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'n' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction61, position)
-							}
-						case 's':
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'v' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'n' {
-								goto l452
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction59, position)
-							}
-						case 'f':
-							position++
-							if buffer[position] != 'i' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'v' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction57, position)
-							}
-						case 'o':
-							position++
-							if buffer[position] != 'n' {
-								goto l452
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l452
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction53, position)
-							}
-						default:
-							{
-								position479 := position
-								if c := buffer[position]; c < '0' || c > '9' {
-									goto l452
-								}
-								position++
-							l480:
-								{
-									position481, tokenIndex481 := position, tokenIndex
-									if c := buffer[position]; c < '0' || c > '9' {
-										goto l481
-									}
-									position++
-									goto l480
-								l481:
-									position, tokenIndex = position481, tokenIndex481
-								}
-								add(rulePegText, position479)
-							}
-							_rules[rule_]()
-							{
-								add(ruleAction52, position)
-							}
-						}
-					}
-
-				}
-			l454:
-				add(ruleNumber, position453)
-			}
-			memoize(19, position452, tokenIndex452, true)
-			return true
-		l452:
-			memoize(19, position452, tokenIndex452, false)
-			position, tokenIndex = position452, tokenIndex452
-			return false
-		},
-		/* 20 Weekday <- <(('s' 'u' 'n' 'd' 'a' 'y' _ Action67) / ('t' 'u' 'e' 's' 'd' 'a' 'y' _ Action69) / ((&('s') ('s' 'a' 't' 'u' 'r' 'd' 'a' 'y' _ Action73)) | (&('f') ('f' 'r' 'i' 'd' 'a' 'y' _ Action72)) | (&('t') ('t' 'h' 'u' 'r' 's' 'd' 'a' 'y' _ Action71)) | (&('w') ('w' 'e' 'd' 'n' 'e' 's' 'd' 'a' 'y' _ Action70)) | (&('m') ('m' 'o' 'n' 'd' 'a' 'y' _ Action68))))> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{20, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position483, tokenIndex483 := position, tokenIndex
-			{
-				position484 := position
-				{
-					position485, tokenIndex485 := position, tokenIndex
-					if buffer[position] != 's' {
-						goto l486
+					goto l496
+				l505:
+					position, tokenIndex = position496, tokenIndex496
+					if buffer[position] != 't' {
+						goto l507
 					}
 					position++
-					if buffer[position] != 'u' {
-						goto l486
+					if buffer[position] != 'e' {
+						goto l507
 					}
 					position++
 					if buffer[position] != 'n' {
-						goto l486
-					}
-					position++
-					if buffer[position] != 'd' {
-						goto l486
-					}
-					position++
-					if buffer[position] != 'a' {
-						goto l486
-					}
-					position++
-					if buffer[position] != 'y' {
-						goto l486
+						goto l507
 					}
 					position++
 					_rules[rule_]()
 					{
 						add(ruleAction67, position)
 					}
-					goto l485
-				l486:
-					position, tokenIndex = position485, tokenIndex485
-					if buffer[position] != 't' {
-						goto l488
-					}
-					position++
-					if buffer[position] != 'u' {
-						goto l488
-					}
-					position++
-					if buffer[position] != 'e' {
-						goto l488
-					}
-					position++
-					if buffer[position] != 's' {
-						goto l488
-					}
-					position++
-					if buffer[position] != 'd' {
-						goto l488
-					}
-					position++
+					goto l496
+				l507:
+					position, tokenIndex = position496, tokenIndex496
 					if buffer[position] != 'a' {
-						goto l488
+						goto l509
 					}
 					position++
-					if buffer[position] != 'y' {
-						goto l488
+					if buffer[position] != 'n' {
+						goto l509
 					}
 					position++
+					{
+						position510, tokenIndex510 := position, tokenIndex
+						if c := buffer[position]; c < 'a' || c > 'z' {
+							goto l510
+						}
+						position++
+						goto l509
+					l510:
+						position, tokenIndex = position510, tokenIndex510
+					}
 					_rules[rule_]()
 					{
-						add(ruleAction69, position)
+						add(ruleAction70, position)
 					}
-					goto l485
-				l488:
-					position, tokenIndex = position485, tokenIndex485
+					goto l496
+				l509:
+					position, tokenIndex = position496, tokenIndex496
 					{
 						switch buffer[position] {
-						case 's':
+						case 'a':
 							position++
-							if buffer[position] != 'a' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 't' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'u' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'r' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'd' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'a' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'y' {
-								goto l483
-							}
-							position++
-							_rules[rule_]()
 							{
-								add(ruleAction73, position)
+								position513, tokenIndex513 := position, tokenIndex
+								if c := buffer[position]; c < 'a' || c > 'z' {
+									goto l513
+								}
+								position++
+								goto l494
+							l513:
+								position, tokenIndex = position513, tokenIndex513
 							}
-						case 'f':
-							position++
-							if buffer[position] != 'r' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'i' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'd' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'a' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'y' {
-								goto l483
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction72, position)
-							}
-						case 't':
-							position++
-							if buffer[position] != 'h' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'u' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'r' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 's' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'd' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'a' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'y' {
-								goto l483
-							}
-							position++
 							_rules[rule_]()
 							{
 								add(ruleAction71, position)
 							}
-						case 'w':
+						case 't':
 							position++
-							if buffer[position] != 'e' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'd' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'n' {
-								goto l483
+							if buffer[position] != 'w' {
+								goto l494
 							}
 							position++
 							if buffer[position] != 'e' {
-								goto l483
+								goto l494
 							}
 							position++
-							if buffer[position] != 's' {
-								goto l483
+							if buffer[position] != 'l' {
+								goto l494
 							}
 							position++
-							if buffer[position] != 'd' {
-								goto l483
+							if buffer[position] != 'v' {
+								goto l494
 							}
 							position++
-							if buffer[position] != 'a' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'y' {
-								goto l483
+							if buffer[position] != 'e' {
+								goto l494
 							}
 							position++
 							_rules[rule_]()
 							{
-								add(ruleAction70, position)
+								add(ruleAction69, position)
 							}
-						default:
-							if buffer[position] != 'm' {
-								goto l483
+						case 'e':
+							position++
+							if buffer[position] != 'l' {
+								goto l494
 							}
 							position++
-							if buffer[position] != 'o' {
-								goto l483
+							if buffer[position] != 'e' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'v' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l494
 							}
 							position++
 							if buffer[position] != 'n' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'd' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'a' {
-								goto l483
-							}
-							position++
-							if buffer[position] != 'y' {
-								goto l483
+								goto l494
 							}
 							position++
 							_rules[rule_]()
 							{
 								add(ruleAction68, position)
 							}
+						case 'n':
+							position++
+							if buffer[position] != 'i' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'n' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l494
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction66, position)
+							}
+						case 's':
+							position++
+							if buffer[position] != 'e' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'v' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'n' {
+								goto l494
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction64, position)
+							}
+						case 'f':
+							position++
+							if buffer[position] != 'i' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'v' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l494
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction62, position)
+							}
+						case 'o':
+							position++
+							if buffer[position] != 'n' {
+								goto l494
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l494
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction58, position)
+							}
+						default:
+							{
+								position521 := position
+								if c := buffer[position]; c < '0' || c > '9' {
+									goto l494
+								}
+								position++
+							l522:
+								{
+									position523, tokenIndex523 := position, tokenIndex
+									if c := buffer[position]; c < '0' || c > '9' {
+										goto l523
+									}
+									position++
+									goto l522
+								l523:
+									position, tokenIndex = position523, tokenIndex523
+								}
+								add(rulePegText, position521)
+							}
+							_rules[rule_]()
+							{
+								add(ruleAction57, position)
+							}
 						}
 					}
 
 				}
-			l485:
-				add(ruleWeekday, position484)
+			l496:
+				add(ruleNumber, position495)
 			}
-			memoize(20, position483, tokenIndex483, true)
+			memoize(20, position494, tokenIndex494, true)
 			return true
-		l483:
-			memoize(20, position483, tokenIndex483, false)
-			position, tokenIndex = position483, tokenIndex483
+		l494:
+			memoize(20, position494, tokenIndex494, false)
+			position, tokenIndex = position494, tokenIndex494
 			return false
 		},
-		/* 21 Month <- <(('j' 'a' 'n' 'u' 'a' 'r' 'y' _ Action74) / ('m' 'a' 'r' 'c' 'h' _ Action76) / ('a' 'p' 'r' 'i' 'l' _ Action77) / ('j' 'u' 'n' 'e' _ Action79) / ((&('d') ('d' 'e' 'c' 'e' 'm' 'b' 'e' 'r' _ Action85)) | (&('n') ('n' 'o' 'v' 'e' 'm' 'b' 'e' 'r' _ Action84)) | (&('o') ('o' 'c' 't' 'o' 'b' 'e' 'r' _ Action83)) | (&('s') ('s' 'e' 'p' 't' 'e' 'm' 'b' 'e' 'r' _ Action82)) | (&('a') ('a' 'u' 'g' 'u' 's' 't' _ Action81)) | (&('j') ('j' 'u' 'l' 'y' _ Action80)) | (&('m') ('m' 'a' 'y' _ Action78)) | (&('f') ('f' 'e' 'b' 'r' 'u' 'a' 'r' 'y' _ Action75))))> */
+		/* 21 Weekday <- <(('s' 'u' 'n' 'd' 'a' 'y' _ Action72) / ('t' 'u' 'e' 's' 'd' 'a' 'y' _ Action74) / ((&('s') ('s' 'a' 't' 'u' 'r' 'd' 'a' 'y' _ Action78)) | (&('f') ('f' 'r' 'i' 'd' 'a' 'y' _ Action77)) | (&('t') ('t' 'h' 'u' 'r' 's' 'd' 'a' 'y' _ Action76)) | (&('w') ('w' 'e' 'd' 'n' 'e' 's' 'd' 'a' 'y' _ Action75)) | (&('m') ('m' 'o' 'n' 'd' 'a' 'y' _ Action73))))> */
 		func() bool {
 			if memoized, ok := memoization[memoKey[U]{21, position}]; ok {
 				return memoizedResult(memoized)
 			}
-			position496, tokenIndex496 := position, tokenIndex
+			position525, tokenIndex525 := position, tokenIndex
 			{
-				position497 := position
+				position526 := position
 				{
-					position498, tokenIndex498 := position, tokenIndex
-					if buffer[position] != 'j' {
-						goto l499
-					}
-					position++
-					if buffer[position] != 'a' {
-						goto l499
-					}
-					position++
-					if buffer[position] != 'n' {
-						goto l499
+					position527, tokenIndex527 := position, tokenIndex
+					if buffer[position] != 's' {
+						goto l528
 					}
 					position++
 					if buffer[position] != 'u' {
-						goto l499
+						goto l528
+					}
+					position++
+					if buffer[position] != 'n' {
+						goto l528
+					}
+					position++
+					if buffer[position] != 'd' {
+						goto l528
 					}
 					position++
 					if buffer[position] != 'a' {
-						goto l499
-					}
-					position++
-					if buffer[position] != 'r' {
-						goto l499
+						goto l528
 					}
 					position++
 					if buffer[position] != 'y' {
-						goto l499
+						goto l528
+					}
+					position++
+					_rules[rule_]()
+					{
+						add(ruleAction72, position)
+					}
+					goto l527
+				l528:
+					position, tokenIndex = position527, tokenIndex527
+					if buffer[position] != 't' {
+						goto l530
+					}
+					position++
+					if buffer[position] != 'u' {
+						goto l530
+					}
+					position++
+					if buffer[position] != 'e' {
+						goto l530
+					}
+					position++
+					if buffer[position] != 's' {
+						goto l530
+					}
+					position++
+					if buffer[position] != 'd' {
+						goto l530
+					}
+					position++
+					if buffer[position] != 'a' {
+						goto l530
+					}
+					position++
+					if buffer[position] != 'y' {
+						goto l530
 					}
 					position++
 					_rules[rule_]()
 					{
 						add(ruleAction74, position)
 					}
-					goto l498
-				l499:
-					position, tokenIndex = position498, tokenIndex498
-					if buffer[position] != 'm' {
-						goto l501
-					}
-					position++
-					if buffer[position] != 'a' {
-						goto l501
-					}
-					position++
-					if buffer[position] != 'r' {
-						goto l501
-					}
-					position++
-					if buffer[position] != 'c' {
-						goto l501
-					}
-					position++
-					if buffer[position] != 'h' {
-						goto l501
-					}
-					position++
-					_rules[rule_]()
-					{
-						add(ruleAction76, position)
-					}
-					goto l498
-				l501:
-					position, tokenIndex = position498, tokenIndex498
-					if buffer[position] != 'a' {
-						goto l503
-					}
-					position++
-					if buffer[position] != 'p' {
-						goto l503
-					}
-					position++
-					if buffer[position] != 'r' {
-						goto l503
-					}
-					position++
-					if buffer[position] != 'i' {
-						goto l503
-					}
-					position++
-					if buffer[position] != 'l' {
-						goto l503
-					}
-					position++
-					_rules[rule_]()
-					{
-						add(ruleAction77, position)
-					}
-					goto l498
-				l503:
-					position, tokenIndex = position498, tokenIndex498
-					if buffer[position] != 'j' {
-						goto l505
-					}
-					position++
-					if buffer[position] != 'u' {
-						goto l505
-					}
-					position++
-					if buffer[position] != 'n' {
-						goto l505
-					}
-					position++
-					if buffer[position] != 'e' {
-						goto l505
-					}
-					position++
-					_rules[rule_]()
-					{
-						add(ruleAction79, position)
-					}
-					goto l498
-				l505:
-					position, tokenIndex = position498, tokenIndex498
+					goto l527
+				l530:
+					position, tokenIndex = position527, tokenIndex527
 					{
 						switch buffer[position] {
-						case 'd':
-							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'c' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'm' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'b' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'r' {
-								goto l496
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction85, position)
-							}
-						case 'n':
-							position++
-							if buffer[position] != 'o' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'v' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'm' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'b' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'r' {
-								goto l496
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction84, position)
-							}
-						case 'o':
-							position++
-							if buffer[position] != 'c' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 't' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'o' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'b' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'r' {
-								goto l496
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction83, position)
-							}
 						case 's':
 							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'p' {
-								goto l496
+							if buffer[position] != 'a' {
+								goto l525
 							}
 							position++
 							if buffer[position] != 't' {
-								goto l496
+								goto l525
 							}
 							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'm' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'b' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l496
+							if buffer[position] != 'u' {
+								goto l525
 							}
 							position++
 							if buffer[position] != 'r' {
-								goto l496
+								goto l525
 							}
 							position++
-							_rules[rule_]()
-							{
-								add(ruleAction82, position)
+							if buffer[position] != 'd' {
+								goto l525
 							}
-						case 'a':
-							position++
-							if buffer[position] != 'u' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'g' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'u' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 's' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 't' {
-								goto l496
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction81, position)
-							}
-						case 'j':
-							position++
-							if buffer[position] != 'u' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'l' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'y' {
-								goto l496
-							}
-							position++
-							_rules[rule_]()
-							{
-								add(ruleAction80, position)
-							}
-						case 'm':
 							position++
 							if buffer[position] != 'a' {
-								goto l496
+								goto l525
 							}
 							position++
 							if buffer[position] != 'y' {
-								goto l496
+								goto l525
 							}
 							position++
 							_rules[rule_]()
 							{
 								add(ruleAction78, position)
 							}
-						default:
-							if buffer[position] != 'f' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'e' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'b' {
-								goto l496
-							}
+						case 'f':
 							position++
 							if buffer[position] != 'r' {
-								goto l496
+								goto l525
 							}
 							position++
-							if buffer[position] != 'u' {
-								goto l496
+							if buffer[position] != 'i' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'd' {
+								goto l525
 							}
 							position++
 							if buffer[position] != 'a' {
-								goto l496
-							}
-							position++
-							if buffer[position] != 'r' {
-								goto l496
+								goto l525
 							}
 							position++
 							if buffer[position] != 'y' {
-								goto l496
+								goto l525
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction77, position)
+							}
+						case 't':
+							position++
+							if buffer[position] != 'h' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'u' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'r' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 's' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'd' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'a' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'y' {
+								goto l525
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction76, position)
+							}
+						case 'w':
+							position++
+							if buffer[position] != 'e' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'd' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'n' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 's' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'd' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'a' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'y' {
+								goto l525
 							}
 							position++
 							_rules[rule_]()
 							{
 								add(ruleAction75, position)
 							}
+						default:
+							if buffer[position] != 'm' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'o' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'n' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'd' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'a' {
+								goto l525
+							}
+							position++
+							if buffer[position] != 'y' {
+								goto l525
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction73, position)
+							}
 						}
 					}
 
 				}
-			l498:
-				add(ruleMonth, position497)
+			l527:
+				add(ruleWeekday, position526)
 			}
-			memoize(21, position496, tokenIndex496, true)
+			memoize(21, position525, tokenIndex525, true)
 			return true
-		l496:
-			memoize(21, position496, tokenIndex496, false)
-			position, tokenIndex = position496, tokenIndex496
+		l525:
+			memoize(21, position525, tokenIndex525, false)
+			position, tokenIndex = position525, tokenIndex525
 			return false
 		},
-		/* 22 In <- <(IN Action86)> */
+		/* 22 Month <- <(('j' 'a' 'n' 'u' 'a' 'r' 'y' _ Action79) / ('m' 'a' 'r' 'c' 'h' _ Action81) / ('a' 'p' 'r' 'i' 'l' _ Action82) / ('j' 'u' 'n' 'e' _ Action84) / ((&('d') ('d' 'e' 'c' 'e' 'm' 'b' 'e' 'r' _ Action90)) | (&('n') ('n' 'o' 'v' 'e' 'm' 'b' 'e' 'r' _ Action89)) | (&('o') ('o' 'c' 't' 'o' 'b' 'e' 'r' _ Action88)) | (&('s') ('s' 'e' 'p' 't' 'e' 'm' 'b' 'e' 'r' _ Action87)) | (&('a') ('a' 'u' 'g' 'u' 's' 't' _ Action86)) | (&('j') ('j' 'u' 'l' 'y' _ Action85)) | (&('m') ('m' 'a' 'y' _ Action83)) | (&('f') ('f' 'e' 'b' 'r' 'u' 'a' 'r' 'y' _ Action80))))> */
 		func() bool {
 			if memoized, ok := memoization[memoKey[U]{22, position}]; ok {
 				return memoizedResult(memoized)
 			}
-			position516, tokenIndex516 := position, tokenIndex
+			position538, tokenIndex538 := position, tokenIndex
 			{
-				position517 := position
+				position539 := position
 				{
-					position518 := position
-					{
-						position519, tokenIndex519 := position, tokenIndex
-						if buffer[position] != 'i' {
-							goto l520
-						}
-						position++
-						if buffer[position] != 'n' {
-							goto l520
-						}
-						position++
-						if buffer[position] != ' ' {
-							goto l520
-						}
-						position++
-						if buffer[position] != 'a' {
-							goto l520
-						}
-						position++
-						if buffer[position] != 'n' {
-							goto l520
-						}
-						position++
-						goto l519
-					l520:
-						position, tokenIndex = position519, tokenIndex519
-						if buffer[position] != 'i' {
-							goto l521
-						}
-						position++
-						if buffer[position] != 'n' {
-							goto l521
-						}
-						position++
-						if buffer[position] != ' ' {
-							goto l521
-						}
-						position++
-						if buffer[position] != 'a' {
-							goto l521
-						}
-						position++
-						goto l519
-					l521:
-						position, tokenIndex = position519, tokenIndex519
-						if buffer[position] != 'i' {
-							goto l516
-						}
-						position++
-						if buffer[position] != 'n' {
-							goto l516
-						}
-						position++
-					}
-				l519:
-					_rules[rule_]()
-					add(ruleIN, position518)
-				}
-				{
-					add(ruleAction86, position)
-				}
-				add(ruleIn, position517)
-			}
-			memoize(22, position516, tokenIndex516, true)
-			return true
-		l516:
-			memoize(22, position516, tokenIndex516, false)
-			position, tokenIndex = position516, tokenIndex516
-			return false
-		},
-		/* 23 Last <- <(LAST Action87)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{23, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position523, tokenIndex523 := position, tokenIndex
-			{
-				position524 := position
-				if !_rules[ruleLAST]() {
-					goto l523
-				}
-				{
-					add(ruleAction87, position)
-				}
-				add(ruleLast, position524)
-			}
-			memoize(23, position523, tokenIndex523, true)
-			return true
-		l523:
-			memoize(23, position523, tokenIndex523, false)
-			position, tokenIndex = position523, tokenIndex523
-			return false
-		},
-		/* 24 Next <- <(NEXT Action88)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{24, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position526, tokenIndex526 := position, tokenIndex
-			{
-				position527 := position
-				if !_rules[ruleNEXT]() {
-					goto l526
-				}
-				{
-					add(ruleAction88, position)
-				}
-				add(ruleNext, position527)
-			}
-			memoize(24, position526, tokenIndex526, true)
-			return true
-		l526:
-			memoize(24, position526, tokenIndex526, false)
-			position, tokenIndex = position526, tokenIndex526
-			return false
-		},
-		/* 25 Ordinal <- <(((&('t') ('t' 'h')) | (&('r') ('r' 'd')) | (&('n') ('n' 'd')) | (&('s') ('s' 't'))) _)> */
-		nil,
-		/* 26 Word <- <([a-z]+ _)> */
-		nil,
-		/* 27 YEARS <- <('y' 'e' 'a' 'r' 's'? _)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{27, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position531, tokenIndex531 := position, tokenIndex
-			{
-				position532 := position
-				if buffer[position] != 'y' {
-					goto l531
-				}
-				position++
-				if buffer[position] != 'e' {
-					goto l531
-				}
-				position++
-				if buffer[position] != 'a' {
-					goto l531
-				}
-				position++
-				if buffer[position] != 'r' {
-					goto l531
-				}
-				position++
-				{
-					position533, tokenIndex533 := position, tokenIndex
-					if buffer[position] != 's' {
-						goto l533
-					}
-					position++
-					goto l534
-				l533:
-					position, tokenIndex = position533, tokenIndex533
-				}
-			l534:
-				_rules[rule_]()
-				add(ruleYEARS, position532)
-			}
-			memoize(27, position531, tokenIndex531, true)
-			return true
-		l531:
-			memoize(27, position531, tokenIndex531, false)
-			position, tokenIndex = position531, tokenIndex531
-			return false
-		},
-		/* 28 MONTHS <- <('m' 'o' 'n' 't' 'h' 's'? _)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{28, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position535, tokenIndex535 := position, tokenIndex
-			{
-				position536 := position
-				if buffer[position] != 'm' {
-					goto l535
-				}
-				position++
-				if buffer[position] != 'o' {
-					goto l535
-				}
-				position++
-				if buffer[position] != 'n' {
-					goto l535
-				}
-				position++
-				if buffer[position] != 't' {
-					goto l535
-				}
-				position++
-				if buffer[position] != 'h' {
-					goto l535
-				}
-				position++
-				{
-					position537, tokenIndex537 := position, tokenIndex
-					if buffer[position] != 's' {
-						goto l537
-					}
-					position++
-					goto l538
-				l537:
-					position, tokenIndex = position537, tokenIndex537
-				}
-			l538:
-				_rules[rule_]()
-				add(ruleMONTHS, position536)
-			}
-			memoize(28, position535, tokenIndex535, true)
-			return true
-		l535:
-			memoize(28, position535, tokenIndex535, false)
-			position, tokenIndex = position535, tokenIndex535
-			return false
-		},
-		/* 29 WEEKS <- <('w' 'e' 'e' 'k' 's'? _)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{29, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position539, tokenIndex539 := position, tokenIndex
-			{
-				position540 := position
-				if buffer[position] != 'w' {
-					goto l539
-				}
-				position++
-				if buffer[position] != 'e' {
-					goto l539
-				}
-				position++
-				if buffer[position] != 'e' {
-					goto l539
-				}
-				position++
-				if buffer[position] != 'k' {
-					goto l539
-				}
-				position++
-				{
-					position541, tokenIndex541 := position, tokenIndex
-					if buffer[position] != 's' {
+					position540, tokenIndex540 := position, tokenIndex
+					if buffer[position] != 'j' {
 						goto l541
 					}
 					position++
-					goto l542
+					if buffer[position] != 'a' {
+						goto l541
+					}
+					position++
+					if buffer[position] != 'n' {
+						goto l541
+					}
+					position++
+					if buffer[position] != 'u' {
+						goto l541
+					}
+					position++
+					if buffer[position] != 'a' {
+						goto l541
+					}
+					position++
+					if buffer[position] != 'r' {
+						goto l541
+					}
+					position++
+					if buffer[position] != 'y' {
+						goto l541
+					}
+					position++
+					_rules[rule_]()
+					{
+						add(ruleAction79, position)
+					}
+					goto l540
 				l541:
-					position, tokenIndex = position541, tokenIndex541
-				}
-			l542:
-				_rules[rule_]()
-				add(ruleWEEKS, position540)
-			}
-			memoize(29, position539, tokenIndex539, true)
-			return true
-		l539:
-			memoize(29, position539, tokenIndex539, false)
-			position, tokenIndex = position539, tokenIndex539
-			return false
-		},
-		/* 30 DAYS <- <('d' 'a' 'y' 's'? _)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{30, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position543, tokenIndex543 := position, tokenIndex
-			{
-				position544 := position
-				if buffer[position] != 'd' {
-					goto l543
-				}
-				position++
-				if buffer[position] != 'a' {
-					goto l543
-				}
-				position++
-				if buffer[position] != 'y' {
-					goto l543
-				}
-				position++
-				{
-					position545, tokenIndex545 := position, tokenIndex
-					if buffer[position] != 's' {
+					position, tokenIndex = position540, tokenIndex540
+					if buffer[position] != 'm' {
+						goto l543
+					}
+					position++
+					if buffer[position] != 'a' {
+						goto l543
+					}
+					position++
+					if buffer[position] != 'r' {
+						goto l543
+					}
+					position++
+					if buffer[position] != 'c' {
+						goto l543
+					}
+					position++
+					if buffer[position] != 'h' {
+						goto l543
+					}
+					position++
+					_rules[rule_]()
+					{
+						add(ruleAction81, position)
+					}
+					goto l540
+				l543:
+					position, tokenIndex = position540, tokenIndex540
+					if buffer[position] != 'a' {
 						goto l545
 					}
 					position++
-					goto l546
+					if buffer[position] != 'p' {
+						goto l545
+					}
+					position++
+					if buffer[position] != 'r' {
+						goto l545
+					}
+					position++
+					if buffer[position] != 'i' {
+						goto l545
+					}
+					position++
+					if buffer[position] != 'l' {
+						goto l545
+					}
+					position++
+					_rules[rule_]()
+					{
+						add(ruleAction82, position)
+					}
+					goto l540
 				l545:
-					position, tokenIndex = position545, tokenIndex545
-				}
-			l546:
-				_rules[rule_]()
-				add(ruleDAYS, position544)
-			}
-			memoize(30, position543, tokenIndex543, true)
-			return true
-		l543:
-			memoize(30, position543, tokenIndex543, false)
-			position, tokenIndex = position543, tokenIndex543
-			return false
-		},
-		/* 31 HOURS <- <('h' 'o' 'u' 'r' 's'? _)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{31, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position547, tokenIndex547 := position, tokenIndex
-			{
-				position548 := position
-				if buffer[position] != 'h' {
-					goto l547
-				}
-				position++
-				if buffer[position] != 'o' {
-					goto l547
-				}
-				position++
-				if buffer[position] != 'u' {
-					goto l547
-				}
-				position++
-				if buffer[position] != 'r' {
-					goto l547
-				}
-				position++
-				{
-					position549, tokenIndex549 := position, tokenIndex
-					if buffer[position] != 's' {
-						goto l549
+					position, tokenIndex = position540, tokenIndex540
+					if buffer[position] != 'j' {
+						goto l547
 					}
 					position++
-					goto l550
-				l549:
-					position, tokenIndex = position549, tokenIndex549
-				}
-			l550:
-				_rules[rule_]()
-				add(ruleHOURS, position548)
-			}
-			memoize(31, position547, tokenIndex547, true)
-			return true
-		l547:
-			memoize(31, position547, tokenIndex547, false)
-			position, tokenIndex = position547, tokenIndex547
-			return false
-		},
-		/* 32 MINUTES <- <('m' 'i' 'n' 'u' 't' 'e' 's'? _)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{32, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position551, tokenIndex551 := position, tokenIndex
-			{
-				position552 := position
-				if buffer[position] != 'm' {
-					goto l551
-				}
-				position++
-				if buffer[position] != 'i' {
-					goto l551
-				}
-				position++
-				if buffer[position] != 'n' {
-					goto l551
-				}
-				position++
-				if buffer[position] != 'u' {
-					goto l551
-				}
-				position++
-				if buffer[position] != 't' {
-					goto l551
-				}
-				position++
-				if buffer[position] != 'e' {
-					goto l551
-				}
-				position++
-				{
-					position553, tokenIndex553 := position, tokenIndex
-					if buffer[position] != 's' {
-						goto l553
+					if buffer[position] != 'u' {
+						goto l547
 					}
 					position++
-					goto l554
-				l553:
-					position, tokenIndex = position553, tokenIndex553
+					if buffer[position] != 'n' {
+						goto l547
+					}
+					position++
+					if buffer[position] != 'e' {
+						goto l547
+					}
+					position++
+					_rules[rule_]()
+					{
+						add(ruleAction84, position)
+					}
+					goto l540
+				l547:
+					position, tokenIndex = position540, tokenIndex540
+					{
+						switch buffer[position] {
+						case 'd':
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'c' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'm' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'b' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'r' {
+								goto l538
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction90, position)
+							}
+						case 'n':
+							position++
+							if buffer[position] != 'o' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'v' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'm' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'b' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'r' {
+								goto l538
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction89, position)
+							}
+						case 'o':
+							position++
+							if buffer[position] != 'c' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 't' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'o' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'b' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'r' {
+								goto l538
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction88, position)
+							}
+						case 's':
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'p' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 't' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'm' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'b' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'r' {
+								goto l538
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction87, position)
+							}
+						case 'a':
+							position++
+							if buffer[position] != 'u' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'g' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'u' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 's' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 't' {
+								goto l538
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction86, position)
+							}
+						case 'j':
+							position++
+							if buffer[position] != 'u' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'l' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'y' {
+								goto l538
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction85, position)
+							}
+						case 'm':
+							position++
+							if buffer[position] != 'a' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'y' {
+								goto l538
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction83, position)
+							}
+						default:
+							if buffer[position] != 'f' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'e' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'b' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'r' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'u' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'a' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'r' {
+								goto l538
+							}
+							position++
+							if buffer[position] != 'y' {
+								goto l538
+							}
+							position++
+							_rules[rule_]()
+							{
+								add(ruleAction80, position)
+							}
+						}
+					}
+
 				}
-			l554:
-				_rules[rule_]()
-				add(ruleMINUTES, position552)
+			l540:
+				add(ruleMonth, position539)
 			}
-			memoize(32, position551, tokenIndex551, true)
+			memoize(22, position538, tokenIndex538, true)
 			return true
-		l551:
-			memoize(32, position551, tokenIndex551, false)
-			position, tokenIndex = position551, tokenIndex551
+		l538:
+			memoize(22, position538, tokenIndex538, false)
+			position, tokenIndex = position538, tokenIndex538
 			return false
 		},
-		/* 33 YESTERDAY <- <('y' 'e' 's' 't' 'e' 'r' 'd' 'a' 'y' _)> */
-		nil,
-		/* 34 TOMORROW <- <('t' 'o' 'm' 'o' 'r' 'r' 'o' 'w' _)> */
-		nil,
-		/* 35 TODAY <- <('t' 'o' 'd' 'a' 'y' _)> */
-		nil,
-		/* 36 AGO <- <('a' 'g' 'o' _)> */
+		/* 23 In <- <(IN Action91)> */
 		func() bool {
-			if memoized, ok := memoization[memoKey[U]{36, position}]; ok {
+			if memoized, ok := memoization[memoKey[U]{23, position}]; ok {
 				return memoizedResult(memoized)
 			}
 			position558, tokenIndex558 := position, tokenIndex
 			{
 				position559 := position
-				if buffer[position] != 'a' {
-					goto l558
+				{
+					position560 := position
+					{
+						position561, tokenIndex561 := position, tokenIndex
+						if buffer[position] != 'i' {
+							goto l562
+						}
+						position++
+						if buffer[position] != 'n' {
+							goto l562
+						}
+						position++
+						if buffer[position] != ' ' {
+							goto l562
+						}
+						position++
+						if buffer[position] != 'a' {
+							goto l562
+						}
+						position++
+						if buffer[position] != 'n' {
+							goto l562
+						}
+						position++
+						goto l561
+					l562:
+						position, tokenIndex = position561, tokenIndex561
+						if buffer[position] != 'i' {
+							goto l563
+						}
+						position++
+						if buffer[position] != 'n' {
+							goto l563
+						}
+						position++
+						if buffer[position] != ' ' {
+							goto l563
+						}
+						position++
+						if buffer[position] != 'a' {
+							goto l563
+						}
+						position++
+						goto l561
+					l563:
+						position, tokenIndex = position561, tokenIndex561
+						if buffer[position] != 'i' {
+							goto l558
+						}
+						position++
+						if buffer[position] != 'n' {
+							goto l558
+						}
+						position++
+					}
+				l561:
+					_rules[rule_]()
+					add(ruleIN, position560)
 				}
-				position++
-				if buffer[position] != 'g' {
-					goto l558
+				{
+					add(ruleAction91, position)
 				}
-				position++
-				if buffer[position] != 'o' {
-					goto l558
-				}
-				position++
-				_rules[rule_]()
-				add(ruleAGO, position559)
+				add(ruleIn, position559)
 			}
-			memoize(36, position558, tokenIndex558, true)
+			memoize(23, position558, tokenIndex558, true)
 			return true
 		l558:
-			memoize(36, position558, tokenIndex558, false)
+			memoize(23, position558, tokenIndex558, false)
 			position, tokenIndex = position558, tokenIndex558
 			return false
 		},
-		/* 37 FROM_NOW <- <('f' 'r' 'o' 'm' ' ' 'n' 'o' 'w' _)> */
+		/* 24 Last <- <(LAST Action92)> */
 		func() bool {
-			if memoized, ok := memoization[memoKey[U]{37, position}]; ok {
-				return memoizedResult(memoized)
-			}
-			position560, tokenIndex560 := position, tokenIndex
-			{
-				position561 := position
-				if buffer[position] != 'f' {
-					goto l560
-				}
-				position++
-				if buffer[position] != 'r' {
-					goto l560
-				}
-				position++
-				if buffer[position] != 'o' {
-					goto l560
-				}
-				position++
-				if buffer[position] != 'm' {
-					goto l560
-				}
-				position++
-				if buffer[position] != ' ' {
-					goto l560
-				}
-				position++
-				if buffer[position] != 'n' {
-					goto l560
-				}
-				position++
-				if buffer[position] != 'o' {
-					goto l560
-				}
-				position++
-				if buffer[position] != 'w' {
-					goto l560
-				}
-				position++
-				_rules[rule_]()
-				add(ruleFROM_NOW, position561)
-			}
-			memoize(37, position560, tokenIndex560, true)
-			return true
-		l560:
-			memoize(37, position560, tokenIndex560, false)
-			position, tokenIndex = position560, tokenIndex560
-			return false
-		},
-		/* 38 NOW <- <('n' 'o' 'w' _)> */
-		nil,
-		/* 39 AM <- <('a' 'm' _)> */
-		nil,
-		/* 40 PM <- <('p' 'm' _)> */
-		nil,
-		/* 41 NEXT <- <('n' 'e' 'x' 't' _)> */
-		func() bool {
-			if memoized, ok := memoization[memoKey[U]{41, position}]; ok {
+			if memoized, ok := memoization[memoKey[U]{24, position}]; ok {
 				return memoizedResult(memoized)
 			}
 			position565, tokenIndex565 := position, tokenIndex
 			{
 				position566 := position
-				if buffer[position] != 'n' {
+				if !_rules[ruleLAST]() {
 					goto l565
 				}
-				position++
-				if buffer[position] != 'e' {
-					goto l565
+				{
+					add(ruleAction92, position)
 				}
-				position++
-				if buffer[position] != 'x' {
-					goto l565
-				}
-				position++
-				if buffer[position] != 't' {
-					goto l565
-				}
-				position++
-				_rules[rule_]()
-				add(ruleNEXT, position566)
+				add(ruleLast, position566)
 			}
-			memoize(41, position565, tokenIndex565, true)
+			memoize(24, position565, tokenIndex565, true)
 			return true
 		l565:
-			memoize(41, position565, tokenIndex565, false)
+			memoize(24, position565, tokenIndex565, false)
 			position, tokenIndex = position565, tokenIndex565
 			return false
 		},
-		/* 42 IN <- <((('i' 'n' ' ' 'a' 'n') / ('i' 'n' ' ' 'a') / ('i' 'n')) _)> */
-		nil,
-		/* 43 LAST <- <((('l' 'a' 's' 't') / ('p' 'a' 's' 't') / ('p' 'r' 'e' 'v' 'i' 'o' 'u' 's')) _)> */
+		/* 25 Next <- <(NEXT Action93)> */
 		func() bool {
-			if memoized, ok := memoization[memoKey[U]{43, position}]; ok {
+			if memoized, ok := memoization[memoKey[U]{25, position}]; ok {
 				return memoizedResult(memoized)
 			}
 			position568, tokenIndex568 := position, tokenIndex
 			{
 				position569 := position
-				{
-					position570, tokenIndex570 := position, tokenIndex
-					if buffer[position] != 'l' {
-						goto l571
-					}
-					position++
-					if buffer[position] != 'a' {
-						goto l571
-					}
-					position++
-					if buffer[position] != 's' {
-						goto l571
-					}
-					position++
-					if buffer[position] != 't' {
-						goto l571
-					}
-					position++
-					goto l570
-				l571:
-					position, tokenIndex = position570, tokenIndex570
-					if buffer[position] != 'p' {
-						goto l572
-					}
-					position++
-					if buffer[position] != 'a' {
-						goto l572
-					}
-					position++
-					if buffer[position] != 's' {
-						goto l572
-					}
-					position++
-					if buffer[position] != 't' {
-						goto l572
-					}
-					position++
-					goto l570
-				l572:
-					position, tokenIndex = position570, tokenIndex570
-					if buffer[position] != 'p' {
-						goto l568
-					}
-					position++
-					if buffer[position] != 'r' {
-						goto l568
-					}
-					position++
-					if buffer[position] != 'e' {
-						goto l568
-					}
-					position++
-					if buffer[position] != 'v' {
-						goto l568
-					}
-					position++
-					if buffer[position] != 'i' {
-						goto l568
-					}
-					position++
-					if buffer[position] != 'o' {
-						goto l568
-					}
-					position++
-					if buffer[position] != 'u' {
-						goto l568
-					}
-					position++
-					if buffer[position] != 's' {
-						goto l568
-					}
-					position++
+				if !_rules[ruleNEXT]() {
+					goto l568
 				}
-			l570:
-				_rules[rule_]()
-				add(ruleLAST, position569)
+				{
+					add(ruleAction93, position)
+				}
+				add(ruleNext, position569)
 			}
-			memoize(43, position568, tokenIndex568, true)
+			memoize(25, position568, tokenIndex568, true)
 			return true
 		l568:
-			memoize(43, position568, tokenIndex568, false)
+			memoize(25, position568, tokenIndex568, false)
 			position, tokenIndex = position568, tokenIndex568
 			return false
 		},
-		/* 44 AND <- <('a' 'n' 'd' _)> */
+		/* 26 Ordinal <- <(((&('t') ('t' 'h')) | (&('r') ('r' 'd')) | (&('n') ('n' 'd')) | (&('s') ('s' 't'))) _)> */
 		nil,
-		/* 45 SECONDS <- <('s' 'e' 'c' 'o' 'n' 'd' 's'? _)> */
+		/* 27 Word <- <([a-z]+ _)> */
 		nil,
-		/* 46 _ <- <Whitespace*> */
+		/* 28 YEARS <- <('y' 'e' 'a' 'r' 's'? _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{28, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position573, tokenIndex573 := position, tokenIndex
+			{
+				position574 := position
+				if buffer[position] != 'y' {
+					goto l573
+				}
+				position++
+				if buffer[position] != 'e' {
+					goto l573
+				}
+				position++
+				if buffer[position] != 'a' {
+					goto l573
+				}
+				position++
+				if buffer[position] != 'r' {
+					goto l573
+				}
+				position++
+				{
+					position575, tokenIndex575 := position, tokenIndex
+					if buffer[position] != 's' {
+						goto l575
+					}
+					position++
+					goto l576
+				l575:
+					position, tokenIndex = position575, tokenIndex575
+				}
+			l576:
+				_rules[rule_]()
+				add(ruleYEARS, position574)
+			}
+			memoize(28, position573, tokenIndex573, true)
+			return true
+		l573:
+			memoize(28, position573, tokenIndex573, false)
+			position, tokenIndex = position573, tokenIndex573
+			return false
+		},
+		/* 29 MONTHS <- <('m' 'o' 'n' 't' 'h' 's'? _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{29, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position577, tokenIndex577 := position, tokenIndex
+			{
+				position578 := position
+				if buffer[position] != 'm' {
+					goto l577
+				}
+				position++
+				if buffer[position] != 'o' {
+					goto l577
+				}
+				position++
+				if buffer[position] != 'n' {
+					goto l577
+				}
+				position++
+				if buffer[position] != 't' {
+					goto l577
+				}
+				position++
+				if buffer[position] != 'h' {
+					goto l577
+				}
+				position++
+				{
+					position579, tokenIndex579 := position, tokenIndex
+					if buffer[position] != 's' {
+						goto l579
+					}
+					position++
+					goto l580
+				l579:
+					position, tokenIndex = position579, tokenIndex579
+				}
+			l580:
+				_rules[rule_]()
+				add(ruleMONTHS, position578)
+			}
+			memoize(29, position577, tokenIndex577, true)
+			return true
+		l577:
+			memoize(29, position577, tokenIndex577, false)
+			position, tokenIndex = position577, tokenIndex577
+			return false
+		},
+		/* 30 WEEKS <- <('w' 'e' 'e' 'k' 's'? _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{30, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position581, tokenIndex581 := position, tokenIndex
+			{
+				position582 := position
+				if buffer[position] != 'w' {
+					goto l581
+				}
+				position++
+				if buffer[position] != 'e' {
+					goto l581
+				}
+				position++
+				if buffer[position] != 'e' {
+					goto l581
+				}
+				position++
+				if buffer[position] != 'k' {
+					goto l581
+				}
+				position++
+				{
+					position583, tokenIndex583 := position, tokenIndex
+					if buffer[position] != 's' {
+						goto l583
+					}
+					position++
+					goto l584
+				l583:
+					position, tokenIndex = position583, tokenIndex583
+				}
+			l584:
+				_rules[rule_]()
+				add(ruleWEEKS, position582)
+			}
+			memoize(30, position581, tokenIndex581, true)
+			return true
+		l581:
+			memoize(30, position581, tokenIndex581, false)
+			position, tokenIndex = position581, tokenIndex581
+			return false
+		},
+		/* 31 DAYS <- <('d' 'a' 'y' 's'? _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{31, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position585, tokenIndex585 := position, tokenIndex
+			{
+				position586 := position
+				if buffer[position] != 'd' {
+					goto l585
+				}
+				position++
+				if buffer[position] != 'a' {
+					goto l585
+				}
+				position++
+				if buffer[position] != 'y' {
+					goto l585
+				}
+				position++
+				{
+					position587, tokenIndex587 := position, tokenIndex
+					if buffer[position] != 's' {
+						goto l587
+					}
+					position++
+					goto l588
+				l587:
+					position, tokenIndex = position587, tokenIndex587
+				}
+			l588:
+				_rules[rule_]()
+				add(ruleDAYS, position586)
+			}
+			memoize(31, position585, tokenIndex585, true)
+			return true
+		l585:
+			memoize(31, position585, tokenIndex585, false)
+			position, tokenIndex = position585, tokenIndex585
+			return false
+		},
+		/* 32 HOURS <- <('h' 'o' 'u' 'r' 's'? _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{32, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position589, tokenIndex589 := position, tokenIndex
+			{
+				position590 := position
+				if buffer[position] != 'h' {
+					goto l589
+				}
+				position++
+				if buffer[position] != 'o' {
+					goto l589
+				}
+				position++
+				if buffer[position] != 'u' {
+					goto l589
+				}
+				position++
+				if buffer[position] != 'r' {
+					goto l589
+				}
+				position++
+				{
+					position591, tokenIndex591 := position, tokenIndex
+					if buffer[position] != 's' {
+						goto l591
+					}
+					position++
+					goto l592
+				l591:
+					position, tokenIndex = position591, tokenIndex591
+				}
+			l592:
+				_rules[rule_]()
+				add(ruleHOURS, position590)
+			}
+			memoize(32, position589, tokenIndex589, true)
+			return true
+		l589:
+			memoize(32, position589, tokenIndex589, false)
+			position, tokenIndex = position589, tokenIndex589
+			return false
+		},
+		/* 33 MINUTES <- <('m' 'i' 'n' 'u' 't' 'e' 's'? _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{33, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position593, tokenIndex593 := position, tokenIndex
+			{
+				position594 := position
+				if buffer[position] != 'm' {
+					goto l593
+				}
+				position++
+				if buffer[position] != 'i' {
+					goto l593
+				}
+				position++
+				if buffer[position] != 'n' {
+					goto l593
+				}
+				position++
+				if buffer[position] != 'u' {
+					goto l593
+				}
+				position++
+				if buffer[position] != 't' {
+					goto l593
+				}
+				position++
+				if buffer[position] != 'e' {
+					goto l593
+				}
+				position++
+				{
+					position595, tokenIndex595 := position, tokenIndex
+					if buffer[position] != 's' {
+						goto l595
+					}
+					position++
+					goto l596
+				l595:
+					position, tokenIndex = position595, tokenIndex595
+				}
+			l596:
+				_rules[rule_]()
+				add(ruleMINUTES, position594)
+			}
+			memoize(33, position593, tokenIndex593, true)
+			return true
+		l593:
+			memoize(33, position593, tokenIndex593, false)
+			position, tokenIndex = position593, tokenIndex593
+			return false
+		},
+		/* 34 YESTERDAY <- <('y' 'e' 's' 't' 'e' 'r' 'd' 'a' 'y' _)> */
+		nil,
+		/* 35 TOMORROW <- <('t' 'o' 'm' 'o' 'r' 'r' 'o' 'w' _)> */
+		nil,
+		/* 36 TODAY <- <('t' 'o' 'd' 'a' 'y' _)> */
+		nil,
+		/* 37 AGO <- <('a' 'g' 'o' _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{37, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position600, tokenIndex600 := position, tokenIndex
+			{
+				position601 := position
+				if buffer[position] != 'a' {
+					goto l600
+				}
+				position++
+				if buffer[position] != 'g' {
+					goto l600
+				}
+				position++
+				if buffer[position] != 'o' {
+					goto l600
+				}
+				position++
+				_rules[rule_]()
+				add(ruleAGO, position601)
+			}
+			memoize(37, position600, tokenIndex600, true)
+			return true
+		l600:
+			memoize(37, position600, tokenIndex600, false)
+			position, tokenIndex = position600, tokenIndex600
+			return false
+		},
+		/* 38 FROM_NOW <- <('f' 'r' 'o' 'm' ' ' 'n' 'o' 'w' _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{38, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position602, tokenIndex602 := position, tokenIndex
+			{
+				position603 := position
+				if buffer[position] != 'f' {
+					goto l602
+				}
+				position++
+				if buffer[position] != 'r' {
+					goto l602
+				}
+				position++
+				if buffer[position] != 'o' {
+					goto l602
+				}
+				position++
+				if buffer[position] != 'm' {
+					goto l602
+				}
+				position++
+				if buffer[position] != ' ' {
+					goto l602
+				}
+				position++
+				if buffer[position] != 'n' {
+					goto l602
+				}
+				position++
+				if buffer[position] != 'o' {
+					goto l602
+				}
+				position++
+				if buffer[position] != 'w' {
+					goto l602
+				}
+				position++
+				_rules[rule_]()
+				add(ruleFROM_NOW, position603)
+			}
+			memoize(38, position602, tokenIndex602, true)
+			return true
+		l602:
+			memoize(38, position602, tokenIndex602, false)
+			position, tokenIndex = position602, tokenIndex602
+			return false
+		},
+		/* 39 NOW <- <('n' 'o' 'w' _)> */
+		nil,
+		/* 40 AM <- <('a' 'm' _)> */
+		nil,
+		/* 41 PM <- <('p' 'm' _)> */
+		nil,
+		/* 42 NEXT <- <('n' 'e' 'x' 't' _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{42, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position607, tokenIndex607 := position, tokenIndex
+			{
+				position608 := position
+				if buffer[position] != 'n' {
+					goto l607
+				}
+				position++
+				if buffer[position] != 'e' {
+					goto l607
+				}
+				position++
+				if buffer[position] != 'x' {
+					goto l607
+				}
+				position++
+				if buffer[position] != 't' {
+					goto l607
+				}
+				position++
+				_rules[rule_]()
+				add(ruleNEXT, position608)
+			}
+			memoize(42, position607, tokenIndex607, true)
+			return true
+		l607:
+			memoize(42, position607, tokenIndex607, false)
+			position, tokenIndex = position607, tokenIndex607
+			return false
+		},
+		/* 43 IN <- <((('i' 'n' ' ' 'a' 'n') / ('i' 'n' ' ' 'a') / ('i' 'n')) _)> */
+		nil,
+		/* 44 LAST <- <((('l' 'a' 's' 't') / ('p' 'a' 's' 't') / ('p' 'r' 'e' 'v' 'i' 'o' 'u' 's')) _)> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{44, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position610, tokenIndex610 := position, tokenIndex
+			{
+				position611 := position
+				{
+					position612, tokenIndex612 := position, tokenIndex
+					if buffer[position] != 'l' {
+						goto l613
+					}
+					position++
+					if buffer[position] != 'a' {
+						goto l613
+					}
+					position++
+					if buffer[position] != 's' {
+						goto l613
+					}
+					position++
+					if buffer[position] != 't' {
+						goto l613
+					}
+					position++
+					goto l612
+				l613:
+					position, tokenIndex = position612, tokenIndex612
+					if buffer[position] != 'p' {
+						goto l614
+					}
+					position++
+					if buffer[position] != 'a' {
+						goto l614
+					}
+					position++
+					if buffer[position] != 's' {
+						goto l614
+					}
+					position++
+					if buffer[position] != 't' {
+						goto l614
+					}
+					position++
+					goto l612
+				l614:
+					position, tokenIndex = position612, tokenIndex612
+					if buffer[position] != 'p' {
+						goto l610
+					}
+					position++
+					if buffer[position] != 'r' {
+						goto l610
+					}
+					position++
+					if buffer[position] != 'e' {
+						goto l610
+					}
+					position++
+					if buffer[position] != 'v' {
+						goto l610
+					}
+					position++
+					if buffer[position] != 'i' {
+						goto l610
+					}
+					position++
+					if buffer[position] != 'o' {
+						goto l610
+					}
+					position++
+					if buffer[position] != 'u' {
+						goto l610
+					}
+					position++
+					if buffer[position] != 's' {
+						goto l610
+					}
+					position++
+				}
+			l612:
+				_rules[rule_]()
+				add(ruleLAST, position611)
+			}
+			memoize(44, position610, tokenIndex610, true)
+			return true
+		l610:
+			memoize(44, position610, tokenIndex610, false)
+			position, tokenIndex = position610, tokenIndex610
+			return false
+		},
+		/* 45 AND <- <('a' 'n' 'd' _)> */
+		nil,
+		/* 46 SECONDS <- <('s' 'e' 'c' 'o' 'n' 'd' 's'? _)> */
 		func() bool {
 			if memoized, ok := memoization[memoKey[U]{46, position}]; ok {
 				return memoizedResult(memoized)
 			}
-			position575, tokenIndex575 := position, tokenIndex
+			position616, tokenIndex616 := position, tokenIndex
 			{
-				position576 := position
-			l577:
+				position617 := position
+				if buffer[position] != 's' {
+					goto l616
+				}
+				position++
+				if buffer[position] != 'e' {
+					goto l616
+				}
+				position++
+				if buffer[position] != 'c' {
+					goto l616
+				}
+				position++
+				if buffer[position] != 'o' {
+					goto l616
+				}
+				position++
+				if buffer[position] != 'n' {
+					goto l616
+				}
+				position++
+				if buffer[position] != 'd' {
+					goto l616
+				}
+				position++
 				{
-					position578, tokenIndex578 := position, tokenIndex
+					position618, tokenIndex618 := position, tokenIndex
+					if buffer[position] != 's' {
+						goto l618
+					}
+					position++
+					goto l619
+				l618:
+					position, tokenIndex = position618, tokenIndex618
+				}
+			l619:
+				_rules[rule_]()
+				add(ruleSECONDS, position617)
+			}
+			memoize(46, position616, tokenIndex616, true)
+			return true
+		l616:
+			memoize(46, position616, tokenIndex616, false)
+			position, tokenIndex = position616, tokenIndex616
+			return false
+		},
+		/* 47 _ <- <Whitespace*> */
+		func() bool {
+			if memoized, ok := memoization[memoKey[U]{47, position}]; ok {
+				return memoizedResult(memoized)
+			}
+			position620, tokenIndex620 := position, tokenIndex
+			{
+				position621 := position
+			l622:
+				{
+					position623, tokenIndex623 := position, tokenIndex
 					{
-						position579 := position
+						position624 := position
 						{
 							switch buffer[position] {
 							case '\t':
@@ -5419,184 +5721,204 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 								position++
 							default:
 								{
-									position581 := position
+									position626 := position
 									{
-										position582, tokenIndex582 := position, tokenIndex
+										position627, tokenIndex627 := position, tokenIndex
 										if buffer[position] != '\r' {
-											goto l583
+											goto l628
 										}
 										position++
 										if buffer[position] != '\n' {
-											goto l583
+											goto l628
 										}
 										position++
-										goto l582
-									l583:
-										position, tokenIndex = position582, tokenIndex582
+										goto l627
+									l628:
+										position, tokenIndex = position627, tokenIndex627
 										if buffer[position] != '\n' {
-											goto l584
+											goto l629
 										}
 										position++
-										goto l582
-									l584:
-										position, tokenIndex = position582, tokenIndex582
+										goto l627
+									l629:
+										position, tokenIndex = position627, tokenIndex627
 										if buffer[position] != '\r' {
-											goto l578
+											goto l623
 										}
 										position++
 									}
-								l582:
-									add(ruleEOL, position581)
+								l627:
+									add(ruleEOL, position626)
 								}
 							}
 						}
 
-						add(ruleWhitespace, position579)
+						add(ruleWhitespace, position624)
 					}
-					goto l577
-				l578:
-					position, tokenIndex = position578, tokenIndex578
+					goto l622
+				l623:
+					position, tokenIndex = position623, tokenIndex623
 				}
-				add(rule_, position576)
+				add(rule_, position621)
 			}
-			memoize(46, position575, tokenIndex575, true)
+			memoize(47, position620, tokenIndex620, true)
 			return true
 		},
-		/* 47 Whitespace <- <((&('\t') '\t') | (&(' ') ' ') | (&('\n' | '\r') EOL))> */
+		/* 48 Whitespace <- <((&('\t') '\t') | (&(' ') ' ') | (&('\n' | '\r') EOL))> */
 		nil,
-		/* 48 EOL <- <(('\r' '\n') / '\n' / '\r')> */
+		/* 49 EOL <- <(('\r' '\n') / '\n' / '\r')> */
 		nil,
-		/* 49 EOF <- <!.> */
+		/* 50 EOF <- <!.> */
 		func() bool {
-			if memoized, ok := memoization[memoKey[U]{49, position}]; ok {
+			if memoized, ok := memoization[memoKey[U]{50, position}]; ok {
 				return memoizedResult(memoized)
 			}
-			position587, tokenIndex587 := position, tokenIndex
+			position632, tokenIndex632 := position, tokenIndex
 			{
-				position588 := position
+				position633 := position
 				{
-					position589, tokenIndex589 := position, tokenIndex
+					position634, tokenIndex634 := position, tokenIndex
 					if !matchDot() {
-						goto l589
+						goto l634
 					}
-					goto l587
-				l589:
-					position, tokenIndex = position589, tokenIndex589
+					goto l632
+				l634:
+					position, tokenIndex = position634, tokenIndex634
 				}
-				add(ruleEOF, position588)
+				add(ruleEOF, position633)
 			}
-			memoize(49, position587, tokenIndex587, true)
+			memoize(50, position632, tokenIndex632, true)
 			return true
-		l587:
-			memoize(49, position587, tokenIndex587, false)
-			position, tokenIndex = position587, tokenIndex587
+		l632:
+			memoize(50, position632, tokenIndex632, false)
+			position, tokenIndex = position632, tokenIndex632
 			return false
 		},
-		/* 51 Action0 <- <{
+		/* 52 Action0 <- <{
+		   p.t = p.t.Add(-time.Second * time.Duration(p.number))
+		 }> */
+		nil,
+		/* 53 Action1 <- <{
+		   p.t = p.t.Add(time.Second * time.Duration(p.number))
+		 }> */
+		nil,
+		/* 54 Action2 <- <{
+		   p.t = p.t.Add(-time.Second * time.Duration(p.number))
+		 }> */
+		nil,
+		/* 55 Action3 <- <{
+		   p.t = p.t.Add(time.Second * time.Duration(p.number))
+		 }> */
+		nil,
+		/* 56 Action4 <- <{
+		   p.t = p.t.Add(p.withDirection(time.Second) * time.Duration(p.number))
+		 }> */
+		nil,
+		/* 57 Action5 <- <{
 		   p.t = p.t.Add(-time.Minute * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 52 Action1 <- <{
+		/* 58 Action6 <- <{
 		   p.t = p.t.Add(time.Minute * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 53 Action2 <- <{
+		/* 59 Action7 <- <{
 		   p.t = p.t.Add(-time.Minute * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 54 Action3 <- <{
+		/* 60 Action8 <- <{
 		   p.t = p.t.Add(time.Minute * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 55 Action4 <- <{
+		/* 61 Action9 <- <{
 		   p.t = p.t.Add(p.withDirection(time.Minute) * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 56 Action5 <- <{
+		/* 62 Action10 <- <{
 		   p.t = p.t.Add(-time.Hour * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 57 Action6 <- <{
+		/* 63 Action11 <- <{
 		   p.t = p.t.Add(time.Hour * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 58 Action7 <- <{
+		/* 64 Action12 <- <{
 		   p.t = p.t.Add(-time.Hour * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 59 Action8 <- <{
+		/* 65 Action13 <- <{
 		   p.t = p.t.Add(time.Hour * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 60 Action9 <- <{
+		/* 66 Action14 <- <{
 		   p.t = p.t.Add(p.withDirection(time.Hour) * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 61 Action10 <- <{
+		/* 67 Action15 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, -p.number))
 		 }> */
 		nil,
-		/* 62 Action11 <- <{
+		/* 68 Action16 <- <{
 		   p.t = p.t.AddDate(0, 0, p.number)
 		 }> */
 		nil,
-		/* 63 Action12 <- <{
+		/* 69 Action17 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, -p.number))
 		 }> */
 		nil,
-		/* 64 Action13 <- <{
+		/* 70 Action18 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, p.number))
 		 }> */
 		nil,
-		/* 65 Action14 <- <{
+		/* 71 Action19 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, p.direction * p.number))
 		 }> */
 		nil,
-		/* 66 Action15 <- <{
+		/* 72 Action20 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, -7 * p.number))
 		 }> */
 		nil,
-		/* 67 Action16 <- <{
+		/* 73 Action21 <- <{
 		   p.t = p.t.AddDate(0, 0, 7 * p.number)
 		 }> */
 		nil,
-		/* 68 Action17 <- <{
+		/* 74 Action22 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, -7 * p.number))
 		 }> */
 		nil,
-		/* 69 Action18 <- <{
+		/* 75 Action23 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, 7 * p.number))
 		 }> */
 		nil,
-		/* 70 Action19 <- <{
+		/* 76 Action24 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, p.direction * 7 * p.number))
 		 }> */
 		nil,
-		/* 71 Action20 <- <{
+		/* 77 Action25 <- <{
 		   p.t = p.t.AddDate(0, -p.number, 0)
 		 }> */
 		nil,
-		/* 72 Action21 <- <{
+		/* 78 Action26 <- <{
 		   p.t = p.t.AddDate(0, p.number, 0)
 		 }> */
 		nil,
-		/* 73 Action22 <- <{
+		/* 79 Action27 <- <{
 		   p.t = p.t.AddDate(0, -p.number, 0)
 		 }> */
 		nil,
-		/* 74 Action23 <- <{
+		/* 80 Action28 <- <{
 		   p.t = p.t.AddDate(0, p.number, 0)
 		 }> */
 		nil,
-		/* 75 Action24 <- <{
+		/* 81 Action29 <- <{
 		   p.t = prevMonth(p.t, p.month)
 		 }> */
 		nil,
-		/* 76 Action25 <- <{
+		/* 82 Action30 <- <{
 		   p.t = nextMonth(p.t, p.month)
 		 }> */
 		nil,
-		/* 77 Action26 <- <{
+		/* 83 Action31 <- <{
 		   if p.direction < 0 {
 		     p.t = prevMonth(p.t, p.month)
 		   } else {
@@ -5604,79 +5926,79 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 		   }
 		 }> */
 		nil,
-		/* 78 Action27 <- <{
+		/* 84 Action32 <- <{
 		   p.t = p.t.AddDate(-p.number, 0, 0)
 		 }> */
 		nil,
-		/* 79 Action28 <- <{
+		/* 85 Action33 <- <{
 		   p.t = p.t.AddDate(p.number, 0, 0)
 		 }> */
 		nil,
-		/* 80 Action29 <- <{
+		/* 86 Action34 <- <{
 		   p.t = p.t.AddDate(-p.number, 0, 0)
 		 }> */
 		nil,
-		/* 81 Action30 <- <{
+		/* 87 Action35 <- <{
 		   p.t = p.t.AddDate(p.number, 0, 0)
 		 }> */
 		nil,
-		/* 82 Action31 <- <{
+		/* 88 Action36 <- <{
 		   p.t = time.Date(p.t.Year() - 1, 1, 1, 0, 0, 0, 0, p.t.Location())
 		 }> */
 		nil,
-		/* 83 Action32 <- <{
+		/* 89 Action37 <- <{
 		   p.t = time.Date(p.t.Year() + 1, 1, 1, 0, 0, 0, 0, p.t.Location())
 		 }> */
 		nil,
-		/* 84 Action33 <- <{
+		/* 90 Action38 <- <{
 		   p.t = p.t.AddDate(p.direction * p.number, 0, 0)
 		 }> */
 		nil,
-		/* 85 Action34 <- <{
+		/* 91 Action39 <- <{
 		   p.t = p.t.AddDate(0, p.direction * p.number, 0)
 		 }> */
 		nil,
-		/* 86 Action35 <- <{
+		/* 92 Action40 <- <{
 		   p.t = p.t.AddDate(0, 0, p.direction * 7 * p.number)
 		 }> */
 		nil,
-		/* 87 Action36 <- <{
+		/* 93 Action41 <- <{
 		   p.t = p.t.AddDate(0, 0, p.direction * p.number)
 		 }> */
 		nil,
-		/* 88 Action37 <- <{
+		/* 94 Action42 <- <{
 		   p.t = p.t.Add(p.withDirection(time.Hour) * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 89 Action38 <- <{
+		/* 95 Action43 <- <{
 		   p.t = p.t.Add(p.withDirection(time.Minute) * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 90 Action39 <- <{
+		/* 96 Action44 <- <{
 		   p.t = p.t.Add(p.withDirection(time.Second) * time.Duration(p.number))
 		 }> */
 		nil,
-		/* 91 Action40 <- <{
+		/* 97 Action45 <- <{
 		   p.t = truncateDay(p.t)
 		 }> */
 		nil,
-		/* 92 Action41 <- <{
+		/* 98 Action46 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, -1))
 		 }> */
 		nil,
-		/* 93 Action42 <- <{
+		/* 99 Action47 <- <{
 		   p.t = truncateDay(p.t.AddDate(0, 0, 1))
 		 }> */
 		nil,
-		/* 94 Action43 <- <{
+		/* 100 Action48 <- <{
 		   p.t = truncateDay(prevWeekday(p.t, p.weekday))
 		 }> */
 		nil,
-		/* 95 Action44 <- <{
+		/* 101 Action49 <- <{
 		   p.t = truncateDay(nextWeekday(p.t, p.weekday))
 		 }> */
 		nil,
-		/* 96 Action45 <- <{
+		/* 102 Action50 <- <{
 		   if p.direction < 0 {
 		     p.t = truncateDay(prevWeekday(p.t, p.weekday))
 		   } else {
@@ -5684,36 +6006,36 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 		   }
 		 }> */
 		nil,
-		/* 97 Action46 <- <{
+		/* 103 Action51 <- <{
 		   t := p.t
 		   year, month, _ := t.Date()
 		   hour, min, sec := t.Clock()
 		   p.t = time.Date(year, month, p.number, hour, min, sec, 0, t.Location())
 		 }> */
 		nil,
-		/* 98 Action47 <- <{
+		/* 104 Action52 <- <{
 		   year, month, day := p.t.Date()
 		   p.t = time.Date(year, month, day, p.number, 0, 0, 0, p.t.Location())
 		 }> */
 		nil,
-		/* 99 Action48 <- <{
+		/* 105 Action53 <- <{
 		   year, month, day := p.t.Date()
 		   p.t = time.Date(year, month, day, p.number + 12, 0, 0, 0, p.t.Location())
 		 }> */
 		nil,
-		/* 100 Action49 <- <{
+		/* 106 Action54 <- <{
 		   year, month, day := p.t.Date()
 		   p.t = time.Date(year, month, day, p.number, 0, 0, 0, p.t.Location())
 		 }> */
 		nil,
-		/* 101 Action50 <- <{
+		/* 107 Action55 <- <{
 		   t := p.t
 		   year, month, day := t.Date()
 		   hour, _, _ := t.Clock()
 		   p.t = time.Date(year, month, day, hour, p.number, 0, 0, t.Location())
 		 }> */
 		nil,
-		/* 102 Action51 <- <{
+		/* 108 Action56 <- <{
 		   t := p.t
 		   year, month, day := t.Date()
 		   hour, min, _ := t.Clock()
@@ -5721,79 +6043,79 @@ func (p *parser[U]) Init(options ...func(*parser[U]) error) error {
 		 }> */
 		nil,
 		nil,
-		/* 104 Action52 <- <{ n, _ := strconv.Atoi(text); p.number = n }> */
+		/* 110 Action57 <- <{ n, _ := strconv.Atoi(text); p.number = n }> */
 		nil,
-		/* 105 Action53 <- <{ p.number = 1 }> */
+		/* 111 Action58 <- <{ p.number = 1 }> */
 		nil,
-		/* 106 Action54 <- <{ p.number = 2 }> */
+		/* 112 Action59 <- <{ p.number = 2 }> */
 		nil,
-		/* 107 Action55 <- <{ p.number = 3 }> */
+		/* 113 Action60 <- <{ p.number = 3 }> */
 		nil,
-		/* 108 Action56 <- <{ p.number = 4 }> */
+		/* 114 Action61 <- <{ p.number = 4 }> */
 		nil,
-		/* 109 Action57 <- <{ p.number = 5 }> */
+		/* 115 Action62 <- <{ p.number = 5 }> */
 		nil,
-		/* 110 Action58 <- <{ p.number = 6 }> */
+		/* 116 Action63 <- <{ p.number = 6 }> */
 		nil,
-		/* 111 Action59 <- <{ p.number = 7 }> */
+		/* 117 Action64 <- <{ p.number = 7 }> */
 		nil,
-		/* 112 Action60 <- <{ p.number = 8 }> */
+		/* 118 Action65 <- <{ p.number = 8 }> */
 		nil,
-		/* 113 Action61 <- <{ p.number = 9 }> */
+		/* 119 Action66 <- <{ p.number = 9 }> */
 		nil,
-		/* 114 Action62 <- <{ p.number = 10 }> */
+		/* 120 Action67 <- <{ p.number = 10 }> */
 		nil,
-		/* 115 Action63 <- <{ p.number = 11 }> */
+		/* 121 Action68 <- <{ p.number = 11 }> */
 		nil,
-		/* 116 Action64 <- <{ p.number = 12 }> */
+		/* 122 Action69 <- <{ p.number = 12 }> */
 		nil,
-		/* 117 Action65 <- <{ p.number = 1 }> */
+		/* 123 Action70 <- <{ p.number = 1 }> */
 		nil,
-		/* 118 Action66 <- <{ p.number = 1 }> */
+		/* 124 Action71 <- <{ p.number = 1 }> */
 		nil,
-		/* 119 Action67 <- <{ p.weekday = time.Sunday }> */
+		/* 125 Action72 <- <{ p.weekday = time.Sunday }> */
 		nil,
-		/* 120 Action68 <- <{ p.weekday = time.Monday }> */
+		/* 126 Action73 <- <{ p.weekday = time.Monday }> */
 		nil,
-		/* 121 Action69 <- <{ p.weekday = time.Tuesday }> */
+		/* 127 Action74 <- <{ p.weekday = time.Tuesday }> */
 		nil,
-		/* 122 Action70 <- <{ p.weekday = time.Wednesday }> */
+		/* 128 Action75 <- <{ p.weekday = time.Wednesday }> */
 		nil,
-		/* 123 Action71 <- <{ p.weekday = time.Thursday }> */
+		/* 129 Action76 <- <{ p.weekday = time.Thursday }> */
 		nil,
-		/* 124 Action72 <- <{ p.weekday = time.Friday }> */
+		/* 130 Action77 <- <{ p.weekday = time.Friday }> */
 		nil,
-		/* 125 Action73 <- <{ p.weekday = time.Saturday }> */
+		/* 131 Action78 <- <{ p.weekday = time.Saturday }> */
 		nil,
-		/* 126 Action74 <- <{ p.month = time.January }> */
+		/* 132 Action79 <- <{ p.month = time.January }> */
 		nil,
-		/* 127 Action75 <- <{ p.month = time.February }> */
+		/* 133 Action80 <- <{ p.month = time.February }> */
 		nil,
-		/* 128 Action76 <- <{ p.month = time.March }> */
+		/* 134 Action81 <- <{ p.month = time.March }> */
 		nil,
-		/* 129 Action77 <- <{ p.month = time.April }> */
+		/* 135 Action82 <- <{ p.month = time.April }> */
 		nil,
-		/* 130 Action78 <- <{ p.month = time.May }> */
+		/* 136 Action83 <- <{ p.month = time.May }> */
 		nil,
-		/* 131 Action79 <- <{ p.month = time.June }> */
+		/* 137 Action84 <- <{ p.month = time.June }> */
 		nil,
-		/* 132 Action80 <- <{ p.month = time.July }> */
+		/* 138 Action85 <- <{ p.month = time.July }> */
 		nil,
-		/* 133 Action81 <- <{ p.month = time.August }> */
+		/* 139 Action86 <- <{ p.month = time.August }> */
 		nil,
-		/* 134 Action82 <- <{ p.month = time.September }> */
+		/* 140 Action87 <- <{ p.month = time.September }> */
 		nil,
-		/* 135 Action83 <- <{ p.month = time.October }> */
+		/* 141 Action88 <- <{ p.month = time.October }> */
 		nil,
-		/* 136 Action84 <- <{ p.month = time.November }> */
+		/* 142 Action89 <- <{ p.month = time.November }> */
 		nil,
-		/* 137 Action85 <- <{ p.month = time.December }> */
+		/* 143 Action90 <- <{ p.month = time.December }> */
 		nil,
-		/* 138 Action86 <- <{ p.number = 1}> */
+		/* 144 Action91 <- <{ p.number = 1}> */
 		nil,
-		/* 139 Action87 <- <{ p.number = 1 }> */
+		/* 145 Action92 <- <{ p.number = 1 }> */
 		nil,
-		/* 140 Action88 <- <{ p.number = 1 }> */
+		/* 146 Action93 <- <{ p.number = 1 }> */
 		nil,
 	}
 	p.rules = _rules
