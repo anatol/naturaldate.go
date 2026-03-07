@@ -44,17 +44,17 @@ RelativeMinutes
       p.t = p.t.Add(time.Minute * time.Duration(p.number))
     }
   / Number MINUTES
-    { 
+    {
       p.t = p.t.Add(p.withDirection(time.Minute) * time.Duration(p.number))
     }
 
 RelativeHours
   <- Number HOURS AGO
-    { 
+    {
       p.t = p.t.Add(-time.Hour * time.Duration(p.number))
     }
   / (Number HOURS FROM_NOW / In Number? HOURS FROM_NOW?)
-    { 
+    {
       p.t = p.t.Add(time.Hour * time.Duration(p.number))
     }
   / Last Number? HOURS
@@ -66,52 +66,52 @@ RelativeHours
       p.t = p.t.Add(time.Hour * time.Duration(p.number))
     }
   / Number HOURS
-    { 
+    {
       p.t = p.t.Add(p.withDirection(time.Hour) * time.Duration(p.number))
     }
 
 RelativeDays
   <- Number DAYS AGO
-    { 
-      p.t = truncateDay(p.t.Add(-day * time.Duration(p.number)))
+    {
+      p.t = truncateDay(p.t.AddDate(0, 0, -p.number))
     }
   / (Number DAYS FROM_NOW / In Number? DAYS FROM_NOW?)
-    { 
-      p.t = p.t.Add(day * time.Duration(p.number))
+    {
+      p.t = p.t.AddDate(0, 0, p.number)
     }
   / Last Number? DAYS
     {
-      p.t = truncateDay(p.t.Add(-day * time.Duration(p.number)))
+      p.t = truncateDay(p.t.AddDate(0, 0, -p.number))
     }
   / Next Number? DAYS
     {
-      p.t = truncateDay(p.t.Add(day * time.Duration(p.number)))
+      p.t = truncateDay(p.t.AddDate(0, 0, p.number))
     }
   / Number DAYS
-    { 
-      p.t = truncateDay(p.t.Add(p.withDirection(day) * time.Duration(p.number)))
+    {
+      p.t = truncateDay(p.t.AddDate(0, 0, p.direction * p.number))
     }
 
 RelativeWeeks
   <- Number WEEKS AGO
     {
-      p.t = truncateDay(p.t.Add(-week * time.Duration(p.number))) 
+      p.t = truncateDay(p.t.AddDate(0, 0, -7 * p.number))
     }
   / (Number WEEKS FROM_NOW / In Number? WEEKS FROM_NOW?)
     {
-      p.t = p.t.Add(week * time.Duration(p.number))
+      p.t = p.t.AddDate(0, 0, 7 * p.number)
     }
   / Last Number? WEEKS
     {
-      p.t = truncateDay(p.t.Add(-week * time.Duration(p.number))) 
+      p.t = truncateDay(p.t.AddDate(0, 0, -7 * p.number))
     }
   / Next Number? WEEKS
     {
-      p.t = truncateDay(p.t.Add(week * time.Duration(p.number))) 
+      p.t = truncateDay(p.t.AddDate(0, 0, 7 * p.number))
     }
   / Number WEEKS
     {
-      p.t = truncateDay(p.t.Add(p.withDirection(week) * time.Duration(p.number))) 
+      p.t = truncateDay(p.t.AddDate(0, 0, p.direction * 7 * p.number))
     }
 
 RelativeMonth
@@ -180,13 +180,13 @@ RelativeWeekdays
     {
       p.t = truncateDay(p.t)
     }
-  / YESTERDAY 
+  / YESTERDAY
     {
-      p.t = truncateDay(p.t.Add(-day))
+      p.t = truncateDay(p.t.AddDate(0, 0, -1))
     }
   / TOMORROW
     {
-      p.t = truncateDay(p.t.Add(+day))
+      p.t = truncateDay(p.t.AddDate(0, 0, 1))
     }
   / LAST Weekday
     {
@@ -216,7 +216,7 @@ Date
 
 Time
   <- Clock12Hour
-   / Clock24Hour 
+   / Clock24Hour
 
 Clock12Hour
   <- Number
@@ -272,6 +272,10 @@ Number
   / 'eight' _     { p.number = 8 }
   / 'nine' _      { p.number = 9 }
   / 'ten' _       { p.number = 10 }
+  / 'eleven' _    { p.number = 11 }
+  / 'twelve' _    { p.number = 12 }
+  / 'an' !([a-z]) _ { p.number = 1 }
+  / 'a' !([a-z]) _  { p.number = 1 }
 
 Weekday
   <- 'sunday' _   { p.weekday = time.Sunday }

@@ -1,4 +1,4 @@
-//go:generate peg -inline -switch grammar.peg
+//go:generate /Users/ap900908/bin/peg -inline -switch grammar.peg
 
 // Package naturaldate provides natural date time parsing.
 package naturaldate
@@ -7,12 +7,6 @@ import (
 	"strings"
 	"time"
 )
-
-// day duration.
-var day = time.Hour * 24
-
-// week duration.
-var week = time.Hour * 24 * 7
 
 // Direction is the direction used for ambiguous expressions.
 type Direction int
@@ -24,13 +18,13 @@ const (
 )
 
 // Option function.
-type Option func(*parser)
+type Option func(*parser[uint32])
 
 // WithDirection sets the direction used for ambiguous expressions. By default
 // the Past direction is used, so "sunday" will be the previous Sunday, rather
 // than the next Sunday.
 func WithDirection(d Direction) Option {
-	return func(p *parser) {
+	return func(p *parser[uint32]) {
 		switch d {
 		case Past:
 			p.direction = -1
@@ -44,7 +38,7 @@ func WithDirection(d Direction) Option {
 
 // Parse query string.
 func Parse(s string, ref time.Time, options ...Option) (time.Time, error) {
-	p := &parser{
+	p := &parser[uint32]{
 		Buffer:    strings.ToLower(s),
 		direction: -1,
 		t:         ref,
@@ -54,7 +48,9 @@ func Parse(s string, ref time.Time, options ...Option) (time.Time, error) {
 		o(p)
 	}
 
-	p.Init()
+	if err := p.Init(); err != nil {
+		return time.Time{}, err
+	}
 
 	if err := p.Parse(); err != nil {
 		return time.Time{}, err
@@ -66,7 +62,7 @@ func Parse(s string, ref time.Time, options ...Option) (time.Time, error) {
 }
 
 // withDirection returns duration with direction.
-func (p *parser) withDirection(d time.Duration) time.Duration {
+func (p *parser[U]) withDirection(d time.Duration) time.Duration {
 	return d * time.Duration(p.direction)
 }
 

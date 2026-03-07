@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tj/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 // base time.
@@ -41,6 +41,8 @@ var pastCases = []struct {
 	{`next hour`, `2019-11-25 14:07:18 +0000 UTC`},
 	{`1 hour ago`, `2019-11-25 12:07:18 +0000 UTC`},
 	{`6 hours ago`, `2019-11-25 07:07:18 +0000 UTC`},
+	{`an hour ago`, `2019-11-25 12:07:18 +0000 UTC`},
+	{`twelve hours ago`, `2019-11-25 01:07:18 +0000 UTC`},
 	{`1 hour from now`, `2019-11-25 14:07:18 +0000 UTC`},
 	{`Remind me in 1 hour`, `2019-11-25 14:07:18 +0000 UTC`},
 	{`Remind me in 1 hour from now`, `2019-11-25 14:07:18 +0000 UTC`},
@@ -75,6 +77,9 @@ var pastCases = []struct {
 
 	// months
 	{`1 month ago`, `2019-10-25 13:07:18 +0000 UTC`},
+	{`a month ago`, `2019-10-25 13:07:18 +0000 UTC`},
+	{`eleven months ago`, `2018-12-25 13:07:18 +0000 UTC`},
+	{`a month ago`, `2019-10-25 13:07:18 +0000 UTC`},
 	{`last month`, `2019-10-25 13:07:18 +0000 UTC`},
 	{`next month`, `2019-12-25 13:07:18 +0000 UTC`},
 	{`1 month ago at 9:30am`, `2019-10-25 09:30:00 +0000 UTC`},
@@ -200,7 +205,7 @@ var pastCases = []struct {
 	{`Remind me in one month from now at 7am`, `2019-12-25 07:00:00 +0000 UTC`},
 
 	// errors
-	{`10:am`, "\nparse error near PegText (line 1 symbol 1 - line 1 symbol 3):\n\"10\"\n"},
+	{`10:am`, "\nparse error near PegText (line 1 symbol 1 - line 0 symbol 0):\n\"10\"\n"},
 }
 
 // futureCases are test cases for the future direction.
@@ -258,10 +263,37 @@ func TestParse_future(t *testing.T) {
 	}
 }
 
+// Test DST boundary behavior.
+func TestParse_dst(t *testing.T) {
+	loc, err := time.LoadLocation("America/New_York")
+	if err != nil {
+		t.Skip("tzdata not available")
+	}
+
+	// Nov 3, 2019 is the DST switch in US (clocks fall back at 2 AM)
+	// From Nov 2 12:00 PM (EDT), 1 day from now should be Nov 3 12:00 PM (EST), maintaining local clock time.
+	baseDST := time.Date(2019, 11, 2, 12, 0, 0, 0, loc)
+
+	v, err := Parse("1 day from now", baseDST)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, "2019-11-03 12:00:00 -0500 EST", v.String())
+
+	// "1 day ago" from Nov 4 12:00 PM (EST) should be Nov 3 12:00 PM (EST)
+	// After `truncateDay` we get Nov 3 00:00:00, which is EDT (before 2 AM switch).
+	baseDST2 := time.Date(2019, 11, 4, 12, 0, 0, 0, loc)
+	v, err = Parse("1 day ago", baseDST2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assert.Equal(t, "2019-11-03 00:00:00 -0400 EDT", v.String()) // truncateDay goes to 00:00
+}
+
 // Benchmark parsing.
 func BenchmarkParse(b *testing.B) {
 	b.SetBytes(1)
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		_, err := Parse(`december 23rd at 5:25pm`, base)
 		if err != nil {
 			log.Fatalf("error: %s", err)
