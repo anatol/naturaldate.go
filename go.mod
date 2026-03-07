@@ -1,4 +1,4 @@
-module github.com/tj/go-naturaldate
+module github.com/anatol/naturaldate.go
 
 go 1.26
 
