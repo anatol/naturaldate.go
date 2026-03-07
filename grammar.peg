@@ -10,8 +10,18 @@ type parser Peg {
   direction int
 }
 
+# The Root rule exists solely to ensure that pointlander/peg does not drop the
+# Query and DurationQuery rules from the generated parser. We duplicate the
+# references here to prevent the -inline flag from fully inlining these rules,
+# which would also cause their standalone parser functions to be dropped.
+Root
+  <- Query / Query / DurationQuery / DurationQuery
+
 Query
   <- _ Expr+ EOF
+
+DurationQuery
+  <- _ DurationExpr+ EOF
 
 Expr
   <- NOW
@@ -174,6 +184,38 @@ RelativeYear
       p.t = time.Date(p.t.Year() + 1, 1, 1, 0, 0, 0, 0, p.t.Location())
     }
 
+DurationExpr
+  <- DurationTerm ((_ AND _ / _) DurationTerm)*
+
+DurationTerm
+  <- Number _ YEARS
+    {
+      p.t = p.t.AddDate(p.direction * p.number, 0, 0)
+    }
+  / Number _ MONTHS
+    {
+      p.t = p.t.AddDate(0, p.direction * p.number, 0)
+    }
+  / Number _ WEEKS
+    {
+      p.t = p.t.AddDate(0, 0, p.direction * 7 * p.number)
+    }
+  / Number _ DAYS
+    {
+      p.t = p.t.AddDate(0, 0, p.direction * p.number)
+    }
+  / Number _ HOURS
+    {
+      p.t = p.t.Add(p.withDirection(time.Hour) * time.Duration(p.number))
+    }
+  / Number _ MINUTES
+    {
+      p.t = p.t.Add(p.withDirection(time.Minute) * time.Duration(p.number))
+    }
+  / Number _ SECONDS
+    {
+      p.t = p.t.Add(p.withDirection(time.Second) * time.Duration(p.number))
+    }
 
 RelativeWeekdays
   <- TODAY
@@ -332,6 +374,8 @@ PM         <- 'pm' _
 NEXT       <- 'next' _
 IN         <- ('in an' / 'in a' / 'in') _
 LAST       <- ('last' / 'past' / 'previous') _
+AND        <- 'and' _
+SECONDS    <- 'second' 's'? _
 
 _
   <- Whitespace*

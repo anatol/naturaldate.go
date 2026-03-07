@@ -52,13 +52,49 @@ func Parse(s string, ref time.Time, options ...Option) (time.Time, error) {
 		return time.Time{}, err
 	}
 
-	if err := p.Parse(); err != nil {
+	if err := p.Parse(int(ruleQuery)); err != nil {
 		return time.Time{}, err
 	}
 
 	p.Execute()
 	// p.PrintSyntaxTree()
 	return p.t, nil
+}
+
+// ParseDuration parses a duration query string.
+// It will first attempt to use the standard time.ParseDuration format (e.g. "1h3m").
+// If that fails, it falls back to parsing natural language ("1 month and 2 days")
+// evaluated against the provided ref Time, and returns the net duration difference.
+func ParseDuration(s string, ref time.Time, options ...Option) (time.Duration, error) {
+	s = strings.TrimSpace(s)
+	if d, err := time.ParseDuration(s); err == nil {
+		return d, nil
+	}
+
+	p := &parser[uint32]{
+		Buffer:    strings.ToLower(s),
+		direction: -1,
+		t:         ref,
+	}
+
+	for _, o := range options {
+		o(p)
+	}
+
+	if err := p.Init(); err != nil {
+		return 0, err
+	}
+
+	if err := p.Parse(int(ruleDurationQuery)); err != nil {
+		return 0, err
+	}
+
+	p.Execute()
+
+	if p.direction < 0 {
+		return ref.Sub(p.t), nil
+	}
+	return p.t.Sub(ref), nil
 }
 
 // withDirection returns duration with direction.
