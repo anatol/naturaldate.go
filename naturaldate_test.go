@@ -293,11 +293,42 @@ var durationCases = []struct {
 	{`1 year and 2 months`, `10248h0m0s`}, // (365d + 62d)*24h = 427 * 24 = 10248h from base reference Nov 25 2019 (+1 year -> Nov 25 2020 + 2 mo -> Jan 25 2021)
 }
 
+// durationCases_past contains duration testing queries for the past direction.
+var durationCases_past = []struct {
+	Input  string
+	Output string
+}{
+	{`1 week`, `168h0m0s`},
+	{`1 day and 4 minutes`, `24h4m0s`},
+	{`2 hours`, `2h0m0s`},
+	{`1 minute 30 seconds`, `1m30s`},
+	{`1 minute and 30 seconds`, `1m30s`},
+	{`1h3m`, `1h3m0s`},
+	{`2h30m40s`, `2h30m40s`},
+	{`-4m`, `-4m0s`},
+	{`1 year and 2 months`, `10224h0m0s`}, // (365d + 61d)*24h = 426 * 24 = 10224h from base reference Nov 25 2019 (-1 year -> Nov 25 2018 - 2 mo -> Sep 25 2018)
+}
+
+// Test duration parsing in the past.
+func TestParseDuration_past(t *testing.T) {
+	for _, c := range durationCases_past {
+		t.Run(c.Input, func(t *testing.T) {
+			v, err := ParseDuration(c.Input, base, WithDirection(Past))
+			if err != nil {
+				assert.Equal(t, c.Output, err.Error())
+				return
+			}
+			assert.Equal(t, c.Output, v.String())
+		})
+	}
+}
+
 // Test duration parsing.
-func TestParseDuration(t *testing.T) {
+func TestParseDuration_future(t *testing.T) {
 	for _, c := range durationCases {
 		t.Run(c.Input, func(t *testing.T) {
 			v, err := ParseDuration(c.Input, base, WithDirection(Future))
+
 			if err != nil {
 				assert.Equal(t, c.Output, err.Error())
 				return

@@ -63,6 +63,7 @@ func Parse(s string, ref time.Time, options ...Option) (time.Time, error) {
 
 // ParseDuration parses a duration query string.
 // It will first attempt to use the standard time.ParseDuration format (e.g. "1h3m").
+// Using time.ParseDuration may produce negative duration (e.g. "-4m")
 // If that fails, it falls back to parsing natural language ("1 month and 2 days")
 // evaluated against the provided ref Time, and returns the net duration difference.
 func ParseDuration(s string, ref time.Time, options ...Option) (time.Duration, error) {
