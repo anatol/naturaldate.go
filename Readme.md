@@ -4,7 +4,7 @@
 ![](https://img.shields.io/badge/license-MIT-blue.svg)
 ![](https://img.shields.io/badge/status-stable-green.svg)
 
-Natural date time parsing for Go. This project is a fork of [tj/go-naturaldate](https://github.com/anatol/naturaldate.go). This package was designed for parsing human-friendly relative date/time ranges (e.g., "today", "5 minutes ago", "next month") in [Apex Logs](https://apex.sh/logs/)' command-line log search, but is flexible enough to be used in any Go project that requires natural language date parsing.
+Natural date time parsing for Go. This project is a fork of [tj/go-naturaldate](https://github.com/tj/go-naturaldate). This package was designed for parsing human-friendly relative date/time ranges (e.g., "today", "5 minutes ago", "next month") in [Apex Logs](https://apex.sh/logs/)' command-line log search, but is flexible enough to be used in any Go project that requires natural language date parsing.
 
 ## Installation
 
